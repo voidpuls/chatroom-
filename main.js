@@ -95,16 +95,15 @@ document.getElementById('sign-out-button').addEventListener('click', signOut);
 firebase.auth().onAuthStateChanged((user) => {
   currentUser = user;
 
-  if (user) {
-    if (user.emailVerified) {
-      showElement('name-input');
-      hideElement('sign-in-container');
-      showPopup('Please enter your name to join the chat.');
-    } else {
-      showPopup('Please verify your email before joining the chat.');
-      hideElement('chat-input');
-      hideElement('profile-menu');
-    }
+  if (user && user.emailVerified) {
+    showElement('name-input');
+    hideElement('sign-in-container');
+    showPopup('Please enter your name to join the chat.');
+  } else if (user) {
+    showPopup('Please verify your email before joining the chat.');
+    hideElement('chat-input');
+    hideElement('profile-menu');
+    hideElement('name-input');
   } else {
     showElement('sign-in-container');
     hideElement('name-input');
