@@ -25,9 +25,10 @@
       <button id="send-button">Send</button>
       <button id="change-name-button">Change Name</button>
       <button id="sign-out-button" style="display: none;">Sign Out</button>
+      <div id="username-display"></div>
     </div>
     <div class="profile-menu" style="display: none;">
-      <input type="text" placeholder="Enter new name..." id="new-name-input">
+      <input type="text" placeholder="Enter new name..." id="new-name-input" oninput="updateUsername(this.value)">
       <button id="save-name-button">Save</button>
     </div>
   </div>
