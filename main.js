@@ -52,6 +52,7 @@ function signOut() {
       showPopup('You have been signed out.');
       hideElement('chat-input');
       hideElement('profile-menu');
+      hideElement('sign-out-button');
       document.getElementById('chat-messages').innerHTML = '';
     })
     .catch((error) => {
@@ -103,12 +104,14 @@ firebase.auth().onAuthStateChanged((user) => {
     showPopup('Please verify your email before joining the chat.');
     hideElement('chat-input');
     hideElement('profile-menu');
+    hideElement('sign-out-button');
     hideElement('name-input');
   } else {
     showElement('sign-in-container');
     hideElement('name-input');
     hideElement('chat-input');
     hideElement('profile-menu');
+    hideElement('sign-out-button');
     document.getElementById('chat-messages').innerHTML = '';
     showPopup('You are not logged in.');
   }
