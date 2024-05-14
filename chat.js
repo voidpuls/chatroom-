@@ -40,6 +40,7 @@ function displayMessage(message) {
   messageElement.appendChild(timestampElement);
 
   document.getElementById('chat-messages').appendChild(messageElement);
+  toggleElement('chat-messages', true); // Show the chat messages container
 }
 
 function joinChat(name) {
@@ -88,7 +89,7 @@ function changeUserName(newName) {
           displayName: newName
         })
           .then(() => {
-            toggleElement('profile-menu', false, 'hidden');
+            toggleElement('profile-menu', false);
             updateUsername(newName);
             displaySystemMessage(`${currentUser.displayName} changed their name to ${newName}.`);
           })
@@ -114,9 +115,11 @@ function displaySystemMessage(message) {
   messageElement.classList.add('system-message');
   messageElement.textContent = message;
   document.getElementById('chat-messages').appendChild(messageElement);
+  toggleElement('chat-messages', true); // Show the chat messages container
 }
 
 // Add an event listener for the 'input' event on the 'new-name-input' field
 document.getElementById('new-name-input').addEventListener('input', (event) => {
   updateUsername(event.target.value);
 });
+
