@@ -28,7 +28,7 @@ const initializeChat = (username, showChat = true) => {
   chatMessagesContainer.innerHTML = '';
 
   // Listen for new messages and filter out profanity
-  const unsubscribe = firebase.firestore().collection('messages').orderBy('created', 'asc').onSnapshot((snapshot) => {
+  const unsubscribe = messagesQuery.onSnapshot((snapshot) => {
     snapshot.docChanges().forEach((change) => {
       if (change.type === 'added') {
         const message = change.doc.data();
@@ -85,7 +85,7 @@ const initializeChat = (username, showChat = true) => {
     const message = messageInput.value.trim();
     if (message) {
       try {
-        await firebase.firestore().collection('messages').add({
+        await messagesCollection.add({
           user: firebase.auth().currentUser.displayName,
           message,
           created: new Date(),
