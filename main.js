@@ -129,4 +129,3 @@ function updateUIBasedOnAuthState(user) {
     showPopup('You are not logged in.');
   }
 }
-
