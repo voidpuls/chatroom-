@@ -2,9 +2,9 @@ import { auth, db } from './main.js';
 import { doc, setDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, where, writeBatch } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js";
 import { sendVerificationEmail } from './utils.js';
 
-export function initializeChat(username, showChat = true) {
-  const messagesCollection = collection(db, 'messages');
-  const messagesQuery = query(messagesCollection, orderBy('created', 'asc'));
+const initializeChat = (username, showChat = true) => {
+  const messagesCollection = firebase.firestore().collection('messages');
+  const messagesQuery = messagesCollection.orderBy('created', 'asc');
   const chatMessagesContainer = document.getElementById('chat-messages');
   const messageInput = document.getElementById('message-input');
   const sendButton = document.getElementById('send-button');
@@ -12,12 +12,14 @@ export function initializeChat(username, showChat = true) {
   const signOutButton = document.getElementById('sign-out-button');
 
   // Check if the user is verified
-  const user = auth.currentUser;
+  const user = firebase.auth().currentUser;
   if (!user || !user.emailVerified) {
     showPopup('Please verify your email before joining the chat.');
-    sendVerificationEmail(user); // Send verification email
+    utils.sendVerificationEmail(user); // Send verification email
     return;
   }
+
+};
 
   // Show or hide the chat interface
   if (showChat) {
