@@ -101,7 +101,7 @@ firebase.auth().onAuthStateChanged((user) => {
     hideElement('sign-in-container');
     showElement('sign-out-button');
     showElement('name-input');
-    showPopup('Please enter your name to join the chat.');
+    showPopup(`You are logged in as ${user.email}. Please enter your name to join the chat.`);
   } else if (user) {
     hideElement('sign-in-container');
     hideElement('chat-input');
