@@ -51,6 +51,7 @@ function joinChat(name) {
         showElement('chat-input');
         showElement('chat-messages');
         hideElement('name-input');
+        updateUsername(name);
       })
       .catch((error) => {
         console.error('Error updating user profile:', error);
@@ -69,6 +70,7 @@ function changeUserName(newName) {
     })
       .then(() => {
         hideElement('profile-menu');
+        updateUsername(newName);
       })
       .catch((error) => {
         console.error('Error updating user profile:', error);
@@ -76,4 +78,9 @@ function changeUserName(newName) {
   } else {
     showPopup('You must be signed in to change your name.');
   }
+}
+
+function updateUsername(name) {
+  const usernameDisplay = document.getElementById('username-display');
+  usernameDisplay.textContent = name;
 }
