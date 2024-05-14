@@ -1,115 +1,97 @@
-import { API_KEY } from './config.js';
-import { utils } from './utils.js';
-const firebaseConfig = {
-  apiKey: "AIzaSyDisnhcjYmvZc2y9-toeWWKHq9nHYb8Fn4",
-  authDomain: "chatroom-50dfb.firebaseapp.com",
-  databaseURL: "https://chatroom-50dfb-default-rtdb.firebaseio.com",
-  projectId: "chatroom-50dfb",
-  storageBucket: "chatroom-50dfb.appspot.com",
-  messagingSenderId: "533310796123",
-  appId: "1:533310796123:web:1f9cb3326563d3dee72a7e",
-  measurementId: "G-GTXX84ZBPD"
-};
-
-firebase.initializeApp(firebaseConfig);
-
-// DOM elements
-const signInContainer = document.querySelector('.sign-in-container');
-const nameInput = document.querySelector('#name-input');
-const joinButton = document.querySelector('#join-button');
-const chatMessages = document.querySelector('#chat-messages');
-const messageInput = document.querySelector('#message-input');
-const sendButton = document.querySelector('#send-button');
-const changeNameButton = document.querySelector('#change-name-button');
-const signOutButton = document.querySelector('#sign-out-button');
-const profileMenu = document.querySelector('.profile-menu');
-const newNameInput = document.querySelector('#new-name-input');
-const saveNameButton = document.querySelector('#save-name-button');
-
-// Sign in/up event listeners
-document.querySelector('#sign-in-button').addEventListener('click', signIn);
-document.querySelector('#sign-up-button').addEventListener('click', signUp);
-document.querySelector('#reset-password-button').addEventListener('click', resetPassword);
-
-// Chat event listeners
-joinButton.addEventListener('click', joinChat);
-saveNameButton.addEventListener('click', saveNewName);
-
-// Firebase references
-let currentUser;
-let currentUserName;
-
-// Sign in function
-function signIn() {
-  const email = document.querySelector('#email-input').value;
-  const password = document.querySelector('#password-input').value;
-
-  firebase.auth().signInWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      currentUser = userCredential.user;
-      showNameInput();
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
-
-// Sign up function
-function signUp() {
-  const email = document.querySelector('#email-input').value;
-  const password = document.querySelector('#password-input').value;
-
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      currentUser = userCredential.user;
-      showNameInput();
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
-
-// Reset password function
-function resetPassword() {
-  const email = document.querySelector('#email-input').value;
-
-  utils.sendPasswordResetEmailUtil(email)
-    .then(() => {
-      alert('Password reset email sent!');
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
-
-// Show name input
-function showNameInput() {
-  signInContainer.style.display = 'none';
-  document.querySelector('.name-input').style.display = 'block';
-}
-
-// Join chat
-function joinChat() {
-  currentUserName = nameInput.value.trim();
-  if (currentUserName) {
-    document.querySelector('.name-input').style.display = 'none';
-    initializeChat(currentUserName);
+// Event listeners and main logic
+document.getElementById('sign-in-button').addEventListener('click', signIn);
+document.getElementById('sign-up-button').addEventListener('click', signUp);
+document.getElementById('reset-password-button').addEventListener('click', resetPassword);
+document.getElementById('join-button').addEventListener('click', () => {
+  const name = document.getElementById('name-input').value.trim();
+  if (name) {
+    joinChat(name);
+  } else {
+    showPopup('Please enter a name to join the chat.');
   }
-}
-
-// Save new name
-function saveNewName() {
-  const newName = newNameInput.value.trim();
+});
+document.getElementById('send-button').addEventListener('click', () => {
+  const message = document.getElementById('message-input').value.trim();
+  if (message) {
+    sendMessage(message);
+  }
+});
+document.getElementById('change-name-button').addEventListener('click', () => {
+  showElement('profile-menu');
+});
+document.getElementById('save-name-button').addEventListener('click', () => {
+  const newName = document.getElementById('new-name-input').value.trim();
   if (newName) {
-    currentUser.updateProfile({
-      displayName: newName
-    })
+    changeUserName(newName);
+  } else {
+    showPopup('Please enter a new name.');
+  }
+});
+document.getElementById('sign-out-button').addEventListener('click', signOut);
+
+// Initialize Firebase and set up event listeners for real-time updates
+firebase.auth().onAuthStateChanged((user) => {
+  currentUser = user;
+
+  if (user) {
+    showElement('name-input');
+    hideElement('sign-in-container');
+  } else {
+    showElement('sign-in-container');
+    hideElement('name-input');
+    hideElement('chat-input');
+    hideElement('profile-menu');
+    document.getElementById('chat-messages').innerHTML = '';
+  }
+});
+
+messagesCollection.orderBy('timestamp')
+  .onSnapshot((snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      if (change.type === 'added') {
+        displayMessage(change.doc.data());
+      }
+    });
+  });
+
+function signIn() {
+  const email = document.getElementById('email-input').value;
+  const password = document.getElementById('password-input').value;
+
+  auth.signInWithEmailAndPassword(email, password)
+    .catch((error) => {
+      showPopup(`Error signing in: ${error.message}`);
+    });
+}
+
+function signUp() {
+  const email = document.getElementById('email-input').value;
+  const password = document.getElementById('password-input').value;
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .catch((error) => {
+      showPopup(`Error signing up: ${error.message}`);
+    });
+}
+
+function resetPassword() {
+  const email = document.getElementById('email-input').value;
+
+  auth.sendPasswordResetEmail(email)
     .then(() => {
-      currentUserName = newName;
-      profileMenu.style.display = 'none';
+      showPopup('Password reset email sent. Check your inbox.');
     })
     .catch((error) => {
-      console.error('Error updating display name:', error);
+      showPopup(`Error resetting password: ${error.message}`);
     });
-  }
+}
+
+function signOut() {
+  auth.signOut()
+    .then(() => {
+      showPopup('You have been signed out.');
+    })
+    .catch((error) => {
+      showPopup(`Error signing out: ${error.message}`);
+    });
 }
