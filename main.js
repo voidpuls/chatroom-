@@ -5,7 +5,6 @@ import { sendPasswordResetEmailUtil } from './utils.js';
 import { initializeChat } from './chat.js';
 
 // Your web app's Firebase configuration
-// Initialize Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDisnhcjYmvZc2y9-toeWWKHq9nHYb8Fn4",
   authDomain: "chatroom-50dfb.firebaseapp.com",
@@ -17,9 +16,9 @@ const firebaseConfig = {
   measurementId: "G-GTXX84ZBPD"
 };
 
-const app = firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 // DOM elements
 const signInContainer = document.querySelector('.sign-in-container');
