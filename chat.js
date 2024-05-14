@@ -84,3 +84,8 @@ function updateUsername(name) {
   const usernameDisplay = document.getElementById('username-display');
   usernameDisplay.textContent = name;
 }
+
+// Add an event listener for the 'input' event on the 'new-name-input' field
+document.getElementById('new-name-input').addEventListener('input', (event) => {
+  updateUsername(event.target.value);
+});
