@@ -1,6 +1,3 @@
-import { getAuth, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js";
-import { auth } from "./main.js";
-
 const utils = {
   sendVerificationEmail: async (user) => {
     try {
@@ -9,7 +6,7 @@ const utils = {
         handleCodeInApp: true,
       };
 
-      await sendEmailVerification(user, actionCodeSettings);
+      await firebase.auth().currentUser.sendEmailVerification(actionCodeSettings);
       console.log(`Email verification sent to ${user.email}`);
     } catch (error) {
       console.error('Error sending email verification:', error.message);
@@ -24,7 +21,7 @@ const utils = {
         handleCodeInApp: true,
       };
 
-      await sendPasswordResetEmail(auth, email, actionCodeSettings);
+      await firebase.auth().sendPasswordResetEmail(email, actionCodeSettings);
       console.log(`Password reset email sent to ${email}`);
     } catch (error) {
       console.error('Error sending password reset email:', error.message);
