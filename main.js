@@ -100,6 +100,8 @@ firebase.auth().onAuthStateChanged((user) => {
   if (user && user.emailVerified) {
     hideElement('sign-in-container');
     showElement('sign-out-button');
+    showElement('chat-input');
+    showElement('profile-menu');
     showElement('name-input');
     showPopup(`You are logged in as ${user.email}. Please enter your name to join the chat.`);
   } else if (user) {
@@ -128,3 +130,17 @@ messagesCollection.orderBy('timestamp')
       }
     });
   });
+
+function showElement(elementId) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.style.display = 'block';
+  }
+}
+
+function hideElement(elementId) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.style.display = 'none';
+  }
+}
