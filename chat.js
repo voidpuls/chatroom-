@@ -41,7 +41,6 @@ function displayMessage(message) {
 
   document.getElementById('chat-messages').appendChild(messageElement);
 }
-
 function joinChat(name) {
   if (currentUser && currentUser.emailVerified) {
     currentUser.updateProfile({
