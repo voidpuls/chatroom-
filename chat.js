@@ -44,18 +44,29 @@ function displayMessage(message) {
 
 function joinChat(name) {
   if (currentUser && currentUser.emailVerified) {
-    currentUser.updateProfile({
-      displayName: name
-    })
+    const userData = {
+      displayName: name,
+      email: currentUser.email
+    };
+
+    usersCollection.doc(currentUser.uid).set(userData)
       .then(() => {
-        toggleElement('chat-input', true);
-        toggleElement('chat-messages', true);
-        toggleElement('name-input', false);
-        updateUsername(name);
-        displaySystemMessage(`${name} joined the chat.`);
+        currentUser.updateProfile({
+          displayName: name
+        })
+          .then(() => {
+            toggleElement('chat-input', true);
+            toggleElement('chat-messages', true);
+            toggleElement('name-input', false);
+            updateUsername(name);
+            displaySystemMessage(`${name} joined the chat.`);
+          })
+          .catch((error) => {
+            console.error('Error updating user profile:', error);
+          });
       })
       .catch((error) => {
-        console.error('Error updating user profile:', error);
+        console.error('Error updating user data:', error);
       });
   } else if (currentUser) {
     showPopup('Please verify your email before joining the chat.');
@@ -66,16 +77,27 @@ function joinChat(name) {
 
 function changeUserName(newName) {
   if (currentUser) {
-    currentUser.updateProfile({
-      displayName: newName
-    })
+    const userData = {
+      displayName: newName,
+      email: currentUser.email
+    };
+
+    usersCollection.doc(currentUser.uid).set(userData)
       .then(() => {
-        toggleElement('profile-menu', false, 'hidden');
-        updateUsername(newName);
-        displaySystemMessage(`${currentUser.displayName} changed their name to ${newName}.`);
+        currentUser.updateProfile({
+          displayName: newName
+        })
+          .then(() => {
+            toggleElement('profile-menu', false, 'hidden');
+            updateUsername(newName);
+            displaySystemMessage(`${currentUser.displayName} changed their name to ${newName}.`);
+          })
+          .catch((error) => {
+            console.error('Error updating user profile:', error);
+          });
       })
       .catch((error) => {
-        console.error('Error updating user profile:', error);
+        console.error('Error updating user data:', error);
       });
   } else {
     showPopup('You must be signed in to change your name.');
