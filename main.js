@@ -1,6 +1,4 @@
 // Initialize Firebase
-
-// Initialize Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDisnhcjYmvZc2y9-toeWWKHq9nHYb8Fn4",
   authDomain: "chatroom-50dfb.firebaseapp.com",
@@ -14,125 +12,103 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-// Your code...
-const initializeChat = (username, showChat = true) => {
-  const messagesCollection = firebase.firestore().collection('messages');
-  const messagesQuery = messagesCollection.orderBy('created', 'asc');
-  const chatMessagesContainer = document.getElementById('chat-messages');
-  const messageInput = document.getElementById('message-input');
-  const sendButton = document.getElementById('send-button');
-  const changeNameButton = document.getElementById('change-name-button');
-  const signOutButton = document.getElementById('sign-out-button');
+// DOM elements
+const signInContainer = document.querySelector('.sign-in-container');
+const nameInput = document.querySelector('#name-input');
+const joinButton = document.querySelector('#join-button');
+const chatMessages = document.querySelector('#chat-messages');
+const messageInput = document.querySelector('#message-input');
+const sendButton = document.querySelector('#send-button');
+const changeNameButton = document.querySelector('#change-name-button');
+const signOutButton = document.querySelector('#sign-out-button');
+const profileMenu = document.querySelector('.profile-menu');
+const newNameInput = document.querySelector('#new-name-input');
+const saveNameButton = document.querySelector('#save-name-button');
 
-  // Check if the user is verified
-  const user = firebase.auth().currentUser;
-  if (!user || !user.emailVerified) {
-    showPopup('Please verify your email before joining the chat.');
-    utils.sendVerificationEmail(user); // Send verification email
-    return;
-  }
+// Sign in/up event listeners
+document.querySelector('#sign-in-button').addEventListener('click', signIn);
+document.querySelector('#sign-up-button').addEventListener('click', signUp);
+document.querySelector('#reset-password-button').addEventListener('click', resetPassword);
 
-  // Show or hide the chat interface
-  if (showChat) {
-    document.querySelector('.chat-container').style.display = 'block';
-    document.querySelector('.chat-input').style.display = 'flex';
-  } else {
-    document.querySelector('.chat-container').style.display = 'none';
-    document.querySelector('.chat-input').style.display = 'none';
-  }
+// Chat event listeners
+joinButton.addEventListener('click', joinChat);
+saveNameButton.addEventListener('click', saveNewName);
 
-  // Clear the chat container
-  chatMessagesContainer.innerHTML = '';
+// Firebase references
+let currentUser;
+let currentUserName;
 
-  // Listen for new messages and filter out profanity
-  const unsubscribe = firebase.firestore().collection('messages').orderBy('created', 'asc').onSnapshot((snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      if (change.type === 'added') {
-        const message = change.doc.data();
-        const messageElement = document.createElement('div');
+// Sign in function
+function signIn() {
+  const email = document.querySelector('#email-input').value;
+  const password = document.querySelector('#password-input').value;
 
-        // Create a span element for the username and date
-        const userNameDateSpan = document.createElement('span');
-        userNameDateSpan.textContent = `${message.user} (${new Date(message.created.toDate()).toLocaleString()})`;
-
-        // Create a span element for the message content
-        const messageContentSpan = document.createElement('span');
-        messageContentSpan.textContent = `: ${message.message}`;
-
-        // Append the username/date and message content spans to the message element
-        messageElement.appendChild(userNameDateSpan);
-        messageElement.appendChild(messageContentSpan);
-
-        // Only append the message element if it doesn't contain profanity
-        const containsProfanity = message.message.toLowerCase().includes('profanity');
-        if (!containsProfanity) {
-          chatMessagesContainer.appendChild(messageElement);
-        }
-      }
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      currentUser = userCredential.user;
+      showNameInput();
+    })
+    .catch((error) => {
+      console.error(error);
     });
-  });
-
-  // Function to show the verification popup
-  function showPopup(message) {
-    const popup = document.createElement('div');
-    popup.classList.add('popup');
-    popup.innerHTML = `
-      <div class="popup-content">
-        <span class="close-button">&times;</span>
-        <p>${message}</p>
-      </div>
-    `;
-
-    document.body.appendChild(popup);
-
-    const closeButton = popup.querySelector('.close-button');
-    closeButton.addEventListener('click', () => {
-      popup.remove();
-    });
-
-    window.addEventListener('click', (event) => {
-      if (event.target === popup) {
-        popup.remove();
-      }
-    });
-  }
-
-  // Handle send button click
-  sendButton.addEventListener('click', async () => {
-    const message = messageInput.value.trim();
-    if (message) {
-      try {
-        await firebase.firestore().collection('messages').add({
-          user: firebase.auth().currentUser.displayName,
-          message,
-          created: new Date(),
-        });
-        messageInput.value = '';
-      } catch (error) {
-        console.error('Error sending message:', error);
-      }
-    }
-  });
-
-  // Handle change name button click
-  changeNameButton.addEventListener('click', () => {
-    document.querySelector('.profile-menu').style.display = 'block';
-  });
-
-  // Handle sign-out button click
-  signOutButton.addEventListener('click', () => {
-    firebase.auth().signOut()
-      .then(() => {
-        hideChatInterface();
-      })
-      .catch((error) => {
-        console.error('Sign-out failed:', error.message);
-        alert(`Sign-out failed. ${error.message}`);
-      });
-  });
 }
 
-function hideChatInterface() {
-  document.querySelector('.chat-container').style.display = 'none';
-  document.querySelector('.chat-input').style.display = 'none';
+// Sign up function
+function signUp() {
+  const email = document.querySelector('#email-input').value;
+  const password = document.querySelector('#password-input').value;
+
+  firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      currentUser = userCredential.user;
+      showNameInput();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+// Reset password function
+function resetPassword() {
+  const email = document.querySelector('#email-input').value;
+
+  utils.sendPasswordResetEmailUtil(email)
+    .then(() => {
+      alert('Password reset email sent!');
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+// Show name input
+function showNameInput() {
+  signInContainer.style.display = 'none';
+  document.querySelector('.name-input').style.display = 'block';
+}
+
+// Join chat
+function joinChat() {
+  currentUserName = nameInput.value.trim();
+  if (currentUserName) {
+    document.querySelector('.name-input').style.display = 'none';
+    initializeChat(currentUserName);
+  }
+}
+
+// Save new name
+function saveNewName() {
+  const newName = newNameInput.value.trim();
+  if (newName) {
+    currentUser.updateProfile({
+      displayName: newName
+    })
+    .then(() => {
+      currentUserName = newName;
+      profileMenu.style.display = 'none';
+    })
+    .catch((error) => {
+      console.error('Error updating display name:', error);
+    });
+  }
 }
