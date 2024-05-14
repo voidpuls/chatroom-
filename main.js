@@ -122,6 +122,8 @@ firebase.auth().onAuthStateChanged((user) => {
   }
 });
 
+});
+
 messagesCollection.orderBy('timestamp')
   .onSnapshot((snapshot) => {
     snapshot.docChanges().forEach((change) => {
