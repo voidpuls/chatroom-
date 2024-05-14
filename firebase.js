@@ -15,3 +15,4 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 const messagesCollection = firestore.collection('messages');
+const usersCollection = firestore.collection('users');
