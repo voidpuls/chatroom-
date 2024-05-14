@@ -1,4 +1,5 @@
-// Initialize Firebase
+import { API_KEY } from './config.js';
+import { utils } from './utils.js';
 const firebaseConfig = {
   apiKey: "AIzaSyDisnhcjYmvZc2y9-toeWWKHq9nHYb8Fn4",
   authDomain: "chatroom-50dfb.firebaseapp.com",
