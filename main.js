@@ -5,8 +5,9 @@ function signIn() {
 
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
-      showElement('name-input');
       hideElement('sign-in-container');
+      showElement('chat-interface');
+      showElement('name-input');
       showPopup('Please enter your name to join the chat.');
     })
     .catch((error) => {
@@ -55,6 +56,7 @@ function signOut() {
       hideElement('sign-out-button');
       document.getElementById('chat-messages').innerHTML = '';
       showElement('sign-in-container');
+      hideElement('chat-interface');
     })
     .catch((error) => {
       showPopup(`Error signing out: ${error.message}`);
@@ -111,6 +113,7 @@ messagesCollection.orderBy('timestamp')
 function updateUIBasedOnAuthState(user) {
   if (user && user.emailVerified) {
     hideElement('sign-in-container');
+    showElement('chat-interface');
     showElement('sign-out-button');
     showElement('chat-input');
     showElement('profile-menu');
@@ -118,17 +121,11 @@ function updateUIBasedOnAuthState(user) {
     showPopup(`You are logged in as ${user.email}. Please enter your name to join the chat.`);
   } else if (user) {
     hideElement('sign-in-container');
-    hideElement('chat-input');
-    hideElement('profile-menu');
-    hideElement('sign-out-button');
-    hideElement('name-input');
+    hideElement('chat-interface');
     showPopup('Please verify your email before joining the chat.');
   } else {
     showElement('sign-in-container');
-    hideElement('name-input');
-    hideElement('chat-input');
-    hideElement('profile-menu');
-    hideElement('sign-out-button');
+    hideElement('chat-interface');
     document.getElementById('chat-messages').innerHTML = '';
     showPopup('You are not logged in.');
   }
