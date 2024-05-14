@@ -108,17 +108,13 @@ messagesCollection.orderBy('timestamp')
 function updateUIBasedOnAuthState(user) {
   if (user && user.emailVerified) {
     hideElement('login-container');
+    hideElement('name-input');
     showElement('chat-interface');
     showElement('sign-out-button');
     showElement('chat-input');
     showElement('profile-menu');
     const name = user.displayName || '';
     updateUsername(name);
-    if (name) {
-      hideElement('name-input');
-    } else {
-      showElement('name-input');
-    }
     showPopup(`You are logged in as ${user.email}. Welcome to the chat!`);
   } else if (user) {
     hideElement('chat-interface');
@@ -133,3 +129,4 @@ function updateUIBasedOnAuthState(user) {
     showPopup('You are not logged in.');
   }
 }
+
