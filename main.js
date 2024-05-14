@@ -96,7 +96,19 @@ document.getElementById('sign-out-button').addEventListener('click', signOut);
 // Initialize Firebase and set up event listeners for real-time updates
 firebase.auth().onAuthStateChanged((user) => {
   currentUser = user;
+  updateUIBasedOnAuthState(user);
+});
 
+messagesCollection.orderBy('timestamp')
+  .onSnapshot((snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      if (change.type === 'added') {
+        displayMessage(change.doc.data());
+      }
+    });
+  });
+
+function updateUIBasedOnAuthState(user) {
   if (user && user.emailVerified) {
     hideElement('sign-in-container');
     showElement('sign-out-button');
@@ -120,18 +132,7 @@ firebase.auth().onAuthStateChanged((user) => {
     document.getElementById('chat-messages').innerHTML = '';
     showPopup('You are not logged in.');
   }
-});
-
-});
-
-messagesCollection.orderBy('timestamp')
-  .onSnapshot((snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      if (change.type === 'added') {
-        displayMessage(change.doc.data());
-      }
-    });
-  });
+}
 
 function showElement(elementId) {
   const element = document.getElementById(elementId);
