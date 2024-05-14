@@ -4,6 +4,11 @@ function signIn() {
   const password = document.getElementById('password-input').value;
 
   auth.signInWithEmailAndPassword(email, password)
+    .then(() => {
+      showElement('name-input');
+      hideElement('sign-in-container');
+      showPopup('Please enter your name to join the chat.');
+    })
     .catch((error) => {
       showPopup(`Error signing in: ${error.message}`);
     });
@@ -45,6 +50,9 @@ function signOut() {
   auth.signOut()
     .then(() => {
       showPopup('You have been signed out.');
+      hideElement('chat-input');
+      hideElement('profile-menu');
+      document.getElementById('chat-messages').innerHTML = '';
     })
     .catch((error) => {
       showPopup(`Error signing out: ${error.message}`);
@@ -86,6 +94,7 @@ document.getElementById('send-button').addEventListener('click', () => {
   const message = document.getElementById('message-input').value.trim();
   if (message) {
     sendMessage(message);
+    document.getElementById('message-input').value = '';
   }
 });
 document.getElementById('change-name-button').addEventListener('click', () => {
@@ -106,9 +115,13 @@ firebase.auth().onAuthStateChanged((user) => {
   currentUser = user;
 
   if (user) {
-    showElement('name-input');
-    hideElement('sign-in-container');
-    showPopup(`You are logged in as ${user.email}`);
+    if (user.emailVerified) {
+      showElement('name-input');
+      hideElement('sign-in-container');
+      showPopup('Please enter your name to join the chat.');
+    } else {
+      showPopup('Please verify your email before joining the chat.');
+    }
   } else {
     showElement('sign-in-container');
     hideElement('name-input');
@@ -127,5 +140,3 @@ messagesCollection.orderBy('timestamp')
       }
     });
   });
-
-  
