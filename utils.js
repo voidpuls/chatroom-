@@ -1,10 +1,16 @@
 // Utility functions
 function showElement(elementId) {
-  document.getElementById(elementId).style.display = 'block';
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.style.display = 'block';
+  }
 }
 
 function hideElement(elementId) {
-  document.getElementById(elementId).style.display = 'none';
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.style.display = 'none';
+  }
 }
 
 function showPopup(message) {
@@ -30,3 +36,4 @@ function showPopup(message) {
 
   document.body.appendChild(popup);
 }
+
