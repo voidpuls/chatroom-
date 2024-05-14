@@ -11,6 +11,7 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+
 // DOM elements
 const signInContainer = document.querySelector('.sign-in-container');
 const nameInput = document.querySelector('#name-input');
@@ -42,7 +43,7 @@ function signIn() {
   const email = document.querySelector('#email-input').value;
   const password = document.querySelector('#password-input').value;
 
-  signInWithEmailAndPassword(auth, email, password)
+  firebase.auth().signInWithEmailAndPassword(email, password)
     .then((userCredential) => {
       currentUser = userCredential.user;
       showNameInput();
@@ -57,7 +58,7 @@ function signUp() {
   const email = document.querySelector('#email-input').value;
   const password = document.querySelector('#password-input').value;
 
-  createUserWithEmailAndPassword(auth, email, password)
+  firebase.auth().createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
       currentUser = userCredential.user;
       showNameInput();
@@ -71,7 +72,7 @@ function signUp() {
 function resetPassword() {
   const email = document.querySelector('#email-input').value;
 
-  sendPasswordResetEmailUtil(email)
+  utils.sendPasswordResetEmailUtil(email)
     .then(() => {
       alert('Password reset email sent!');
     })
