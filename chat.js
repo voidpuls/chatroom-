@@ -48,10 +48,11 @@ function joinChat(name) {
       displayName: name
     })
       .then(() => {
-        showElement('chat-input');
-        showElement('chat-messages');
-        hideElement('name-input');
+        toggleElement('chat-input', true);
+        toggleElement('chat-messages', true);
+        toggleElement('name-input', false);
         updateUsername(name);
+        displaySystemMessage(`${name} joined the chat.`);
       })
       .catch((error) => {
         console.error('Error updating user profile:', error);
@@ -69,8 +70,9 @@ function changeUserName(newName) {
       displayName: newName
     })
       .then(() => {
-        hideElement('profile-menu');
+        toggleElement('profile-menu', false, 'hidden');
         updateUsername(newName);
+        displaySystemMessage(`${currentUser.displayName} changed their name to ${newName}.`);
       })
       .catch((error) => {
         console.error('Error updating user profile:', error);
@@ -83,6 +85,13 @@ function changeUserName(newName) {
 function updateUsername(name) {
   const usernameDisplay = document.getElementById('username-display');
   usernameDisplay.textContent = name;
+}
+
+function displaySystemMessage(message) {
+  const messageElement = document.createElement('div');
+  messageElement.classList.add('system-message');
+  messageElement.textContent = message;
+  document.getElementById('chat-messages').appendChild(messageElement);
 }
 
 // Add an event listener for the 'input' event on the 'new-name-input' field
