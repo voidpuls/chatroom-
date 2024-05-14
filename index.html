@@ -33,22 +33,47 @@
   </div>
 
   <!-- Firebase SDK scripts -->
-  <script>
-    const script1 = document.createElement('script');
-    script1.src = 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
-    document.head.appendChild(script1);
+  < <script>
+    const firebaseScripts = [
+      'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js',
+      'https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js',
+      'https://www.gstatic.com/firebasejs/9.0.2/firebase-analytics.js',
+      'https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js'
+    ];
 
-    const script2 = document.createElement('script');
-    script2.src = 'https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js';
-    document.head.appendChild(script2);
+    const loadScripts = async () => {
+      for (const script of firebaseScripts) {
+        await new Promise((resolve, reject) => {
+          const scriptElement = document.createElement('script');
+          scriptElement.src = script;
+          scriptElement.onload = resolve;
+          scriptElement.onerror = reject;
+          document.head.appendChild(scriptElement);
+        });
+      }
 
-    const script3 = document.createElement('script');
-    script3.src = 'https://www.gstatic.com/firebasejs/9.0.2/firebase-analytics.js';
-    document.head.appendChild(script3);
+      // Initialize Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyDisnhcjYmvZc2y9-toeWWKHq9nHYb8Fn4",
+        authDomain: "chatroom-50dfb.firebaseapp.com",
+        databaseURL: "https://chatroom-50dfb-default-rtdb.firebaseio.com",
+        projectId: "chatroom-50dfb",
+        storageBucket: "chatroom-50dfb.appspot.com",
+        messagingSenderId: "533310796123",
+        appId: "1:533310796123:web:1f9cb3326563d3dee72a7e",
+        measurementId: "G-GTXX84ZBPD"
+      };
 
-    const script4 = document.createElement('script');
-    script4.src = 'https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js';
-    document.head.appendChild(script4);
+      firebase.initializeApp(firebaseConfig);
+
+      // Import your JavaScript files
+      const config = await import('./config.js');
+      const utils = await import('./utils.js');
+      await import('./main.js');
+      await import('./chat.js');
+    };
+
+    loadScripts();
   </script>
 
   <!-- Import your JavaScript files -->
