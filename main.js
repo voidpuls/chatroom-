@@ -1,3 +1,75 @@
+// Function definitions
+function signIn() {
+  const email = document.getElementById('email-input').value;
+  const password = document.getElementById('password-input').value;
+
+  auth.signInWithEmailAndPassword(email, password)
+    .catch((error) => {
+      showPopup(`Error signing in: ${error.message}`);
+    });
+}
+
+function signUp() {
+  const email = document.getElementById('email-input').value;
+  const password = document.getElementById('password-input').value;
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      user.sendEmailVerification()
+        .then(() => {
+          showPopup('Verification email sent. Please verify your email before joining the chat.');
+        })
+        .catch((error) => {
+          console.error('Error sending verification email:', error);
+        });
+    })
+    .catch((error) => {
+      console.error('Error creating user:', error);
+    });
+}
+
+function resetPassword() {
+  const email = document.getElementById('email-input').value;
+
+  auth.sendPasswordResetEmail(email)
+    .then(() => {
+      showPopup('Password reset email sent. Check your inbox.');
+    })
+    .catch((error) => {
+      showPopup(`Error resetting password: ${error.message}`);
+    });
+}
+
+function signOut() {
+  auth.signOut()
+    .then(() => {
+      showPopup('You have been signed out.');
+    })
+    .catch((error) => {
+      showPopup(`Error signing out: ${error.message}`);
+    });
+}
+
+function joinChat(name) {
+  if (currentUser && currentUser.emailVerified) {
+    currentUser.updateProfile({
+      displayName: name
+    })
+      .then(() => {
+        showElement('chat-input');
+        hideElement('name-input');
+      })
+      .catch((error) => {
+        console.error('Error updating user profile:', error);
+      });
+  } else if (currentUser) {
+    showPopup('Please verify your email before joining the chat.');
+  } else {
+    showPopup('You must be signed in to join the chat.');
+  }
+}
+
 // Event listeners and main logic
 document.getElementById('sign-in-button').addEventListener('click', signIn);
 document.getElementById('sign-up-button').addEventListener('click', signUp);
@@ -53,56 +125,3 @@ messagesCollection.orderBy('timestamp')
       }
     });
   });
-
-function signIn() {
-  const email = document.getElementById('email-input').value;
-  const password = document.getElementById('password-input').value;
-
-  auth.signInWithEmailAndPassword(email, password)
-    .catch((error) => {
-      showPopup(`Error signing in: ${error.message}`);
-    });
-}
-
-function signUp() {
-  const email = document.getElementById('email-input').value;
-  const password = document.getElementById('password-input').value;
-
-  auth.createUserWithEmailAndPassword(email, password)
-  .then((userCredential) => {
-    const user = userCredential.user;
-    user.sendEmailVerification()
-      .then(() => {
-        showPopup('Verification email sent. Please verify your email before joining the chat.');
-      })
-      .catch((error) => {
-        console.error('Error sending verification email:', error);
-      });
-  })
-  .catch((error) => {
-    console.error('Error creating user:', error);
-  });
-
-function resetPassword() {
-  const email = document.getElementById('email-input').value;
-
-  auth.sendPasswordResetEmail(email)
-    .then(() => {
-      showPopup('Password reset email sent. Check your inbox.');
-    })
-    .catch((error) => {
-      showPopup(`Error resetting password: ${error.message}`);
-    });
-}
-
-function signOut() {
-  auth.signOut()
-    .then(() => {
-      showPopup('You have been signed out.');
-    })
-    .catch((error) => {
-      showPopup(`Error signing out: ${error.message}`);
-    });
-};
-};
-
