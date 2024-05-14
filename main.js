@@ -59,26 +59,6 @@ function signOut() {
     });
 }
 
-function joinChat(name) {
-  if (currentUser && currentUser.emailVerified) {
-    currentUser.updateProfile({
-      displayName: name
-    })
-      .then(() => {
-        showElement('chat-input');
-        hideElement('name-input');
-      })
-      .catch((error) => {
-        console.error('Error updating user profile:', error);
-      });
-  } else if (currentUser) {
-    showPopup('Please verify your email before joining the chat.');
-  } else {
-    showPopup('You must be signed in to join the chat.');
-  }
-}
-
-
 // Event listeners and main logic
 document.getElementById('sign-in-button').addEventListener('click', signIn);
 document.getElementById('sign-up-button').addEventListener('click', signUp);
@@ -112,7 +92,6 @@ document.getElementById('save-name-button').addEventListener('click', () => {
 document.getElementById('sign-out-button').addEventListener('click', signOut);
 
 // Initialize Firebase and set up event listeners for real-time updates
-// Initialize Firebase and set up event listeners for real-time updates
 firebase.auth().onAuthStateChanged((user) => {
   currentUser = user;
 
@@ -135,7 +114,6 @@ firebase.auth().onAuthStateChanged((user) => {
     showPopup('You are not logged in.');
   }
 });
-
 
 messagesCollection.orderBy('timestamp')
   .onSnapshot((snapshot) => {
