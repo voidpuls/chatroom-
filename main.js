@@ -78,6 +78,7 @@ function joinChat(name) {
   }
 }
 
+
 // Event listeners and main logic
 document.getElementById('sign-in-button').addEventListener('click', signIn);
 document.getElementById('sign-up-button').addEventListener('click', signUp);
@@ -111,6 +112,7 @@ document.getElementById('save-name-button').addEventListener('click', () => {
 document.getElementById('sign-out-button').addEventListener('click', signOut);
 
 // Initialize Firebase and set up event listeners for real-time updates
+// Initialize Firebase and set up event listeners for real-time updates
 firebase.auth().onAuthStateChanged((user) => {
   currentUser = user;
 
@@ -121,6 +123,8 @@ firebase.auth().onAuthStateChanged((user) => {
       showPopup('Please enter your name to join the chat.');
     } else {
       showPopup('Please verify your email before joining the chat.');
+      hideElement('chat-input');
+      hideElement('profile-menu');
     }
   } else {
     showElement('sign-in-container');
@@ -131,6 +135,7 @@ firebase.auth().onAuthStateChanged((user) => {
     showPopup('You are not logged in.');
   }
 });
+
 
 messagesCollection.orderBy('timestamp')
   .onSnapshot((snapshot) => {
