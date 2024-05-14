@@ -49,6 +49,8 @@ function joinChat(name) {
     })
       .then(() => {
         showElement('chat-input');
+        showElement('profile-menu');
+        showElement('sign-out-button');
         hideElement('name-input');
       })
       .catch((error) => {
