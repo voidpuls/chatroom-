@@ -76,5 +76,3 @@ function changeUserName(newName) {
     showPopup('You must be signed in to change your name.');
   }
 }
-
-// Add more chat-related functions as needed
