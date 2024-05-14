@@ -1,7 +1,3 @@
-import { auth, db } from './main.js';
-import { doc, setDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, where, writeBatch } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js";
-import { sendVerificationEmail } from './utils.js';
-
 const initializeChat = (username, showChat = true) => {
   const messagesCollection = firebase.firestore().collection('messages');
   const messagesQuery = messagesCollection.orderBy('created', 'asc');
@@ -19,8 +15,6 @@ const initializeChat = (username, showChat = true) => {
     return;
   }
 
-};
-
   // Show or hide the chat interface
   if (showChat) {
     document.querySelector('.chat-container').style.display = 'block';
@@ -34,7 +28,7 @@ const initializeChat = (username, showChat = true) => {
   chatMessagesContainer.innerHTML = '';
 
   // Listen for new messages and filter out profanity
-  const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
+  const unsubscribe = firebase.firestore().collection('messages').orderBy('created', 'asc').onSnapshot((snapshot) => {
     snapshot.docChanges().forEach((change) => {
       if (change.type === 'added') {
         const message = change.doc.data();
@@ -91,8 +85,8 @@ const initializeChat = (username, showChat = true) => {
     const message = messageInput.value.trim();
     if (message) {
       try {
-        await addDoc(collection(db, 'messages'), {
-          user: auth.currentUser.displayName,
+        await firebase.firestore().collection('messages').add({
+          user: firebase.auth().currentUser.displayName,
           message,
           created: new Date(),
         });
