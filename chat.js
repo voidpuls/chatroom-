@@ -43,7 +43,7 @@ function displayMessage(message) {
 }
 
 function joinChat(name) {
-  if (currentUser) {
+  if (currentUser && currentUser.emailVerified) {
     currentUser.updateProfile({
       displayName: name
     })
@@ -54,6 +54,8 @@ function joinChat(name) {
       .catch((error) => {
         console.error('Error updating user profile:', error);
       });
+  } else if (currentUser) {
+    showPopup('Please verify your email before joining the chat.');
   } else {
     showPopup('You must be signed in to join the chat.');
   }

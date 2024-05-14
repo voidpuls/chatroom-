@@ -69,10 +69,19 @@ function signUp() {
   const password = document.getElementById('password-input').value;
 
   auth.createUserWithEmailAndPassword(email, password)
-    .catch((error) => {
-      showPopup(`Error signing up: ${error.message}`);
-    });
-}
+  .then((userCredential) => {
+    const user = userCredential.user;
+    user.sendEmailVerification()
+      .then(() => {
+        showPopup('Verification email sent. Please verify your email before joining the chat.');
+      })
+      .catch((error) => {
+        console.error('Error sending verification email:', error);
+      });
+  })
+  .catch((error) => {
+    console.error('Error creating user:', error);
+  });
 
 function resetPassword() {
   const email = document.getElementById('email-input').value;
@@ -94,4 +103,6 @@ function signOut() {
     .catch((error) => {
       showPopup(`Error signing out: ${error.message}`);
     });
-}
+};
+};
+
