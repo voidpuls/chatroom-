@@ -108,12 +108,14 @@ firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     showElement('name-input');
     hideElement('sign-in-container');
+    showPopup(`You are logged in as ${user.email}`);
   } else {
     showElement('sign-in-container');
     hideElement('name-input');
     hideElement('chat-input');
     hideElement('profile-menu');
     document.getElementById('chat-messages').innerHTML = '';
+    showPopup('You are not logged in.');
   }
 });
 
@@ -125,3 +127,5 @@ messagesCollection.orderBy('timestamp')
       }
     });
   });
+
+  
