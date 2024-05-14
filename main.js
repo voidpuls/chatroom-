@@ -54,6 +54,7 @@ function signOut() {
       hideElement('profile-menu');
       hideElement('sign-out-button');
       document.getElementById('chat-messages').innerHTML = '';
+      showElement('sign-in-container');
     })
     .catch((error) => {
       showPopup(`Error signing out: ${error.message}`);
@@ -97,15 +98,17 @@ firebase.auth().onAuthStateChanged((user) => {
   currentUser = user;
 
   if (user && user.emailVerified) {
-    showElement('name-input');
     hideElement('sign-in-container');
+    showElement('sign-out-button');
+    showElement('name-input');
     showPopup('Please enter your name to join the chat.');
   } else if (user) {
-    showPopup('Please verify your email before joining the chat.');
+    hideElement('sign-in-container');
     hideElement('chat-input');
     hideElement('profile-menu');
     hideElement('sign-out-button');
     hideElement('name-input');
+    showPopup('Please verify your email before joining the chat.');
   } else {
     showElement('sign-in-container');
     hideElement('name-input');
