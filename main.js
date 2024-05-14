@@ -1,10 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js";
-import { sendPasswordResetEmailUtil } from './utils.js';
-import { initializeChat } from './chat.js';
-
-// Your web app's Firebase configuration
+// Initialize Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDisnhcjYmvZc2y9-toeWWKHq9nHYb8Fn4",
   authDomain: "chatroom-50dfb.firebaseapp.com",
@@ -16,10 +10,7 @@ const firebaseConfig = {
   measurementId: "G-GTXX84ZBPD"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
+firebase.initializeApp(firebaseConfig);
 // DOM elements
 const signInContainer = document.querySelector('.sign-in-container');
 const nameInput = document.querySelector('#name-input');
