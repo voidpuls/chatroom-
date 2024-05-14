@@ -8,6 +8,10 @@
 </head>
 <body>
   <div class="chat-container">
+    <div class="name-input">
+      <input type="text" placeholder="Enter your name..." id="name-input">
+      <button id="join-button">Join</button>
+    </div>
     <div class="sign-in-container">
       <input type="email" placeholder="Email" id="email-input">
       <input type="password" placeholder="Password" id="password-input">
@@ -16,10 +20,6 @@
       <button id="reset-password-button">Reset Password</button>
     </div>
     <div class="chat-interface" style="display: none;">
-      <div class="name-input">
-        <input type="text" placeholder="Enter your name..." id="name-input">
-        <button id="join-button">Join</button>
-      </div>
       <div class="chat-messages" id="chat-messages"></div>
       <div class="chat-input">
         <input type="text" placeholder="Type your message..." id="message-input">
