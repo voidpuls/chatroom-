@@ -1,4 +1,4 @@
-const utils = {
+export const utils = {
   sendVerificationEmail: async (user) => {
     try {
       const actionCodeSettings = {
