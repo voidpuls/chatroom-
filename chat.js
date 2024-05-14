@@ -108,7 +108,7 @@ export function initializeChat(username, showChat = true) {
 
   // Handle sign-out button click
   signOutButton.addEventListener('click', () => {
-    signOut(auth)
+    firebase.auth().signOut()
       .then(() => {
         hideChatInterface();
       })
