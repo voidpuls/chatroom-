@@ -7,6 +7,7 @@ function signIn() {
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
       hideElement('login-container');
+      hideElement('name-input');
       showElement('chat-interface');
       updateUsername(name);
       showPopup(`You are logged in as ${email}. Welcome to the chat!`);
@@ -57,6 +58,7 @@ function signOut() {
       hideElement('sign-out-button');
       document.getElementById('chat-messages').innerHTML = '';
       showElement('login-container');
+      showElement('name-input');
       hideElement('chat-interface');
     })
     .catch((error) => {
@@ -112,14 +114,21 @@ function updateUIBasedOnAuthState(user) {
     showElement('profile-menu');
     const name = user.displayName || '';
     updateUsername(name);
+    if (name) {
+      hideElement('name-input');
+    } else {
+      showElement('name-input');
+    }
     showPopup(`You are logged in as ${user.email}. Welcome to the chat!`);
   } else if (user) {
     hideElement('chat-interface');
     showElement('login-container');
+    showElement('name-input');
     showPopup('Please verify your email before joining the chat.');
   } else {
     hideElement('chat-interface');
     showElement('login-container');
+    showElement('name-input');
     document.getElementById('chat-messages').innerHTML = '';
     showPopup('You are not logged in.');
   }
