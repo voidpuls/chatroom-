@@ -1,4 +1,5 @@
 import { showPopup } from './utils.js';
+import profaneWords from './profaneWords.js';
 
 // Chat-related functions
 let currentUser = null;
@@ -7,10 +8,16 @@ export function setCurrentUser(user) {
   currentUser = user;
 }
 
+function filterProfanity(message) {
+  const regex = new RegExp(profaneWords.join('|'), 'gi');
+  return message.replace(regex, match => '*'.repeat(match.length));
+}
+
 export function sendMessage(message) {
   if (currentUser) {
+    const filteredMessage = filterProfanity(message);
     const messageData = {
-      text: message,
+      text: filteredMessage,
       sender: currentUser.displayName,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     };
@@ -27,6 +34,8 @@ export function sendMessage(message) {
     showPopup('You must be signed in to send messages.');
   }
 }
+
+// ... (rest of the code remains the same)
 
 export function displayMessage(message) {
   const messageElement = document.createElement('div');
