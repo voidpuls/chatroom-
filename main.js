@@ -40,8 +40,6 @@ function signOut() {
     });
 }
 
-
-
 function resetPassword() {
   const email = document.getElementById('email-input').value;
 
@@ -51,27 +49,6 @@ function resetPassword() {
     })
     .catch((error) => {
       showPopup(`Error resetting password: ${error.message}`);
-    });
-}
-
-function signOut() {
-  auth.signOut()
-    .then(() => {
-      showPopup('You have been signed out.');
-      toggleElement('chat-input', false);
-      toggleElement('profile-menu', false, 'hidden');
-      toggleElement('sign-out-button', false);
-      document.getElementById('chat-messages').innerHTML = '';
-      toggleElement('login-container', true);
-      toggleElement('name-input', true);
-      toggleElement('chat-interface', false);
-      displaySystemMessage('You left the chat.');
-
-      // Reload the page after successful sign-out
-      window.location.reload();
-    })
-    .catch((error) => {
-      showPopup(`Error signing out: ${error.message}`);
     });
 }
 
