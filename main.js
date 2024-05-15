@@ -1,3 +1,6 @@
+// Declare and initialize the currentUser variable
+let currentUser = null;
+
 // Function definitions
 import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, filterProfanity } from './chat.js';
 
