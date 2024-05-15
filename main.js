@@ -29,17 +29,6 @@ function signOut() {
       showPopup(`Error signing out: ${error.message}`);
     });
 }
-
-function signUp() {
-  const email = document.getElementById('email-input').value;
-  const password = document.getElementById('password-input').value;
-  const name = document.getElementById('name-input').value.trim();
-
-  if (currentUser) {
-    showPopup('You are already signed in. Please sign out first to create a new account.');
-    return;
-  }
-
   auth.createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
       const user = userCredential.user;
@@ -87,6 +76,9 @@ function signOut() {
       toggleElement('name-input', true);
       toggleElement('chat-interface', false);
       displaySystemMessage('You left the chat.');
+
+      // Reload the page after successful sign-out
+      window.location.reload();
     })
     .catch((error) => {
       showPopup(`Error signing out: ${error.message}`);
