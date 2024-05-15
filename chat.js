@@ -35,8 +35,6 @@ export function sendMessage(message) {
   }
 }
 
-// ... (rest of the code remains the same)
-
 export function displayMessage(message) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message');
@@ -97,7 +95,7 @@ export function joinChat(name) {
             toggleElement('chat-messages', true);
             toggleElement('name-input', false);
             updateUsername(name);
-            displaySystemMessage(`${name} joined the chat.`, true);
+            displaySystemMessage(`${name} joined the chat.`, true); // Display a global message
           })
           .catch((error) => {
             console.error('Error updating user profile:', error);
@@ -131,7 +129,7 @@ export function changeUserName(newName) {
       .then(() => {
         toggleElement('profile-menu', false);
         updateUsername(newName);
-        displaySystemMessage(`${currentUser.displayName} changed their name to ${newName}.`, true);
+        displaySystemMessage(`${currentUser.displayName} changed their name to ${newName}.`, true); // Display a global message
       })
       .catch((error) => {
         console.error('Error updating user profile:', error);
