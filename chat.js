@@ -49,7 +49,7 @@ function displayMessage(message) {
 
   const senderElement = document.createElement('span');
   senderElement.classList.add('sender');
-  senderElement.textContent = `${message.sender}: `; // Add colon after the sender's name
+  senderElement.textContent = `${message.sender}: `;
 
   const messageContentElement = document.createElement('div');
   messageContentElement.classList.add('message-content');
@@ -69,9 +69,14 @@ function displayMessage(message) {
   messageElement.appendChild(senderElement);
   messageElement.appendChild(messageContentElement);
 
-  document.getElementById('chat-messages').appendChild(messageElement);
+  const chatMessagesContainer = document.getElementById('chat-messages');
+  chatMessagesContainer.appendChild(messageElement);
   toggleElement('chat-messages', true); // Show the chat messages container
+
+  // Scroll to the bottom of the chat area
+  chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 }
+
 function joinChat(name) {
   const filteredName = filterProfanity(name);
 
