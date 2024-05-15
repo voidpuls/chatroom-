@@ -6,16 +6,25 @@ function signIn() {
 
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
-      toggleElement('login-container', false);
-      toggleElement('name-input', false);
-      toggleElement('chat-interface', true);
-      updateUsername(name);
-      showPopup(`You are logged in as ${email}. Welcome to the chat!`);
+      // Reload the page after successful sign-in
+      window.location.reload();
     })
     .catch((error) => {
       showPopup(`Error signing in: ${error.message}`);
     });
 }
+
+function signOut() {
+  auth.signOut()
+    .then(() => {
+      // Reload the page after successful sign-out
+      window.location.reload();
+    })
+    .catch((error) => {
+      showPopup(`Error signing out: ${error.message}`);
+    });
+}
+
 
 function signUp() {
   const email = document.getElementById('email-input').value;
