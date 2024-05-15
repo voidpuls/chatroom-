@@ -206,7 +206,8 @@ document.getElementById('new-name-input').addEventListener('input', (event) => {
 
 // Add an event listener for the 'keydown' event on the 'message-input' field
 document.getElementById('message-input').addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault(); // Prevent the default behavior of the Enter key
     const message = document.getElementById('message-input').value.trim();
     if (message) {
       sendMessage(message);
@@ -214,6 +215,7 @@ document.getElementById('message-input').addEventListener('keydown', (event) => 
     }
   }
 });
+
 
 function toggleElement(elementId, show, className) {
   const element = document.getElementById(elementId);
