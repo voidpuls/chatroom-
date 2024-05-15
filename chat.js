@@ -4,10 +4,10 @@ let profaneWords = [];
 
 function readProfaneWords() {
   return new Promise((resolve, reject) => {
-    fetch('/paste.txt') // Update the file path to '/paste.txt'
+    fetch('/paste.txt')
       .then(response => response.text())
       .then(data => {
-        profaneWords = data.split(/\s+/);
+        profaneWords = data.split(/\s+/); // Split the file contents by whitespace characters
         console.log('Profane words loaded:', profaneWords);
         resolve();
       })
@@ -17,7 +17,6 @@ function readProfaneWords() {
       });
   });
 }
-
 
 function filterProfanity(text) {
   const regex = new RegExp(profaneWords.join('|'), 'gi');
@@ -169,3 +168,20 @@ function displaySystemMessage(message) {
 document.getElementById('new-name-input').addEventListener('input', (event) => {
   updateUsername(event.target.value);
 });
+
+function toggleElement(elementId, show, className) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    if (show) {
+      element.classList.remove('hidden');
+      if (className) {
+        element.classList.remove(className);
+      }
+    } else {
+      element.classList.add('hidden');
+      if (className) {
+        element.classList.add(className);
+      }
+    }
+  }
+}
