@@ -9,19 +9,20 @@ import { showPopup } from './utils.js'; // Import the showPopup function
 function signIn() {
   const email = document.getElementById('email-input').value;
   const password = document.getElementById('password-input').value;
-  const name = document.getElementById('name-input').value.trim();
+  // const name = document.getElementById('name-input').value.trim(); // Remove this line
 
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
       // Reload the page after successful sign-in
       window.location.reload();
-      // Update the username display
-      updateUsername(name);
+      // Update the username display with a placeholder value
+      updateUsername('User');
     })
     .catch((error) => {
       showPopup(`Error signing in: ${error.message}`);
     });
 }
+
 
 function signOut() {
   auth.signOut()
