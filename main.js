@@ -2,7 +2,7 @@
 let currentUser = null;
 
 // Function definitions
-import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, filterProfanity, setCurrentUser } from './chat.js';
+import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, filterProfanity, sendMessage, setCurrentUser } from './chat.js';
 
 // Function definitions
 function signIn() {
