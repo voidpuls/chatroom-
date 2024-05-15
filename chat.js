@@ -1,5 +1,5 @@
+// chat.js
 import profaneWords from './profaneWords.js';
-import profanityCleaner from 'profanity-cleaner';
 import { showPopup } from './utils.js';
 
 // Chat-related functions
@@ -14,6 +14,9 @@ export function filterProfanity(text) {
   const filteredText = text.replace(regex, match => '*'.repeat(match.length));
   return profanityCleaner.clean(filteredText);
 }
+
+// ... (rest of the code remains the same)
+
 
 export function sendMessage(message) {
   if (currentUser) {
