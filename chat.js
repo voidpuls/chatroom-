@@ -4,7 +4,7 @@ let profaneWords = [];
 
 // Function to read the contents of the paste.txt file
 function readProfaneWords() {
-  fetch('bad-word-list/words')
+  fetch('bad-word-list/words.txt')
     .then(response => response.text())
     .then(data => {
       profaneWords = data.split(/\s+/); // Split the file contents by whitespace characters
