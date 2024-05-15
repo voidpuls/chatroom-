@@ -1,3 +1,4 @@
+/* Reset styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -26,7 +27,6 @@ body {
   flex-direction: column;
   align-items: center;
 }
-
 
 .name-input {
   display: flex;
@@ -81,9 +81,38 @@ body {
   background-color: #45a049;
 }
 
+.change-name-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.change-name-container input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 200px;
+  margin-right: 10px;
+}
+
+.change-name-container button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.change-name-container button:hover {
+  background-color: #45a049;
+}
+
 .chat-interface {
   width: 100%;
-  display: none;
 }
 
 .chat-interface.show {
@@ -169,53 +198,6 @@ body {
   background-color: #f0f0f0;
   border-radius: 4px;
   font-weight: bold;
-}
-
-.profile-menu {
-  position: fixed;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #fff;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  z-index: 999;
-  max-width: 400px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.profile-menu input {
-  margin-right: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  width: 200px;
-}
-
-.profile-menu button {
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
-
-.profile-menu button:hover {
-  background-color: #45a049;
-}
-
-
-.profile-menu button:hover {
-  background-color: #45a049;
 }
 
 .popup {
