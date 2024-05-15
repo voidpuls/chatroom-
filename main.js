@@ -2,7 +2,7 @@
 let currentUser = null;
 
 // Function definitions
-import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, filterProfanity } from './chat.js';
+import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, filterProfanity, setCurrentUser } from './chat.js';
 
 // Function definitions
 function signIn() {
@@ -87,6 +87,7 @@ document.getElementById('sign-out-button').addEventListener('click', signOut);
 // Initialize Firebase and set up event listeners for real-time updates
 firebase.auth().onAuthStateChanged((user) => {
   currentUser = user;
+  setCurrentUser(user); // Set the currentUser in the chat.js module
   updateUIBasedOnAuthState(user);
 });
 
