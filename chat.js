@@ -26,6 +26,7 @@ export function sendMessage(message) {
       })
       .catch((error) => {
         console.error('Error sending message:', error);
+        showPopup('An error occurred while sending the message. Please try again later.');
       });
   } else {
     showPopup('You must be signed in to send messages.');
@@ -104,6 +105,7 @@ export function joinChat(name) {
           })
           .catch((error) => {
             console.error('Error updating user profile:', error);
+            showPopup('An error occurred while updating your profile. Please try again later.');
           });
       } else if (currentUser) {
         showPopup('Please verify your email before joining the chat.');
@@ -113,6 +115,7 @@ export function joinChat(name) {
     })
     .catch((error) => {
       console.error('Error checking name availability:', error);
+      showPopup('An error occurred while checking name availability. Please try again later.');
     });
 }
 
