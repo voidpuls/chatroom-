@@ -8,6 +8,8 @@ function signIn() {
     .then(() => {
       // Reload the page after successful sign-in
       window.location.reload();
+      // Update the username display
+      updateUsername(name);
     })
     .catch((error) => {
       showPopup(`Error signing in: ${error.message}`);
@@ -25,10 +27,10 @@ function signOut() {
     });
 }
 
-
 function signUp() {
   const email = document.getElementById('email-input').value;
   const password = document.getElementById('password-input').value;
+  const name = document.getElementById('name-input').value.trim();
 
   if (currentUser) {
     showPopup('You are already signed in. Please sign out first to create a new account.');
@@ -45,6 +47,8 @@ function signUp() {
         .then(() => {
           showPopup('Verification email sent. Please verify your email before joining the chat.');
           updateUIBasedOnAuthState(user); // Update the UI based on the new user's authentication state
+          // Update the username display
+          updateUsername(name);
         })
         .catch((error) => {
           console.error('Error sending verification email:', error);
