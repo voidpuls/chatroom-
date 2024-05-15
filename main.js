@@ -1,3 +1,4 @@
+document.addEventListener('DOMContentLoaded', () => {
 // Declare and initialize the currentUser variable
 let currentUser = null;
 
@@ -144,3 +145,4 @@ function toggleElement(elementId, show, className) {
     }
   }
 }
+)};
