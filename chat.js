@@ -1,5 +1,27 @@
 // Chat-related functions
 let currentUser = null;
+let profaneWords = [];
+
+// Function to read the contents of the paste.txt file
+function readProfaneWords() {
+  fetch('bad-word-list/words')
+    .then(response => response.text())
+    .then(data => {
+      profaneWords = data.split(/\s+/); // Split the file contents by whitespace characters
+      console.log('Profane words loaded:', profaneWords);
+    })
+    .catch(error => {
+      console.error('Error reading profane words:', error);
+    });
+}
+
+// Call the readProfaneWords function when the script loads
+readProfaneWords();
+
+function filterProfanity(text) {
+  const regex = new RegExp(profaneWords.join('|'), 'gi');
+  return text.replace(regex, match => '*'.repeat(match.length));
+}
 
 function sendMessage(message) {
   if (currentUser) {
@@ -52,23 +74,30 @@ function displayMessage(message) {
 }
 
 function joinChat(name) {
+  const filteredName = filterProfanity(name);
+
+  if (filteredName !== name) {
+    showPopup('Please choose a different name without profane words.');
+    return;
+  }
+
   if (currentUser && currentUser.emailVerified) {
     const userData = {
-      displayName: name,
+      displayName: filteredName,
       email: currentUser.email
     };
 
     usersCollection.doc(currentUser.uid).set(userData)
       .then(() => {
         currentUser.updateProfile({
-          displayName: name
+          displayName: filteredName
         })
           .then(() => {
             toggleElement('chat-input', true);
             toggleElement('chat-messages', true);
             toggleElement('name-input', false);
-            updateUsername(name);
-            displaySystemMessage(`${name} joined the chat.`);
+            updateUsername(filteredName);
+            displaySystemMessage(`${filteredName} joined the chat.`);
           })
           .catch((error) => {
             console.error('Error updating user profile:', error);
@@ -85,21 +114,28 @@ function joinChat(name) {
 }
 
 function changeUserName(newName) {
+  const filteredName = filterProfanity(newName);
+
+  if (filteredName !== newName) {
+    showPopup('Please choose a different name without profane words.');
+    return;
+  }
+
   if (currentUser) {
     const userData = {
-      displayName: newName,
+      displayName: filteredName,
       email: currentUser.email
     };
 
     usersCollection.doc(currentUser.uid).set(userData)
       .then(() => {
         currentUser.updateProfile({
-          displayName: newName
+          displayName: filteredName
         })
           .then(() => {
             toggleElement('profile-menu', false);
-            updateUsername(newName);
-            displaySystemMessage(`${currentUser.displayName} changed their name to ${newName}.`);
+            updateUsername(filteredName);
+            displaySystemMessage(`${currentUser.displayName} changed their name to ${filteredName}.`);
           })
           .catch((error) => {
             console.error('Error updating user profile:', error);
@@ -113,8 +149,6 @@ function changeUserName(newName) {
   } else {
     showPopup('You must be signed in to change your name.');
   }
-}
-
 }
 
 function updateUsername(name) {
