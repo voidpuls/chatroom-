@@ -1,12 +1,14 @@
+import profaneWords from './profaneWords.js';
+
 // Chat-related functions
 let currentUser = null;
 
-function filterProfanity(text) {
-  // Implement your profanity filter logic here
-  return text;
+export function filterProfanity(text) {
+  const regex = new RegExp(profaneWords.join('|'), 'gi');
+  return text.replace(regex, match => '*'.repeat(match.length));
 }
 
-function sendMessage(message) {
+export function sendMessage(message) {
   if (currentUser) {
     const messageData = {
       text: filterProfanity(message),
@@ -26,7 +28,7 @@ function sendMessage(message) {
   }
 }
 
-function displayMessage(message) {
+export function displayMessage(message) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message');
 
@@ -60,7 +62,7 @@ function displayMessage(message) {
   chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 }
 
-function joinChat(name) {
+export function joinChat(name) {
   const filteredName = filterProfanity(name);
 
   if (filteredName !== name) {
@@ -110,7 +112,7 @@ function joinChat(name) {
     });
 }
 
-function changeUserName(newName) {
+export function changeUserName(newName) {
   const filteredName = filterProfanity(newName);
 
   if (filteredName !== newName) {
