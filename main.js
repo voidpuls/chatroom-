@@ -134,7 +134,6 @@ function updateUIBasedOnAuthState(user) {
   }
 }
 
-
 function toggleElement(elementId, show, className) {
   const element = document.getElementById(elementId);
   if (element) {
