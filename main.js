@@ -1,5 +1,4 @@
 // Declare and initialize the currentUser variable
-// Declare and initialize the currentUser variable
 let currentUser = null;
 
 // Function definitions
@@ -35,31 +34,6 @@ function signOut() {
       toggleElement('name-input', true);
       toggleElement('chat-interface', false);
       displaySystemMessage('You left the chat.', true); // Display a global message
-
-      // Reload the page after successful sign-out
-      window.location.reload();
-    })
-    .catch((error) => {
-      showPopup(`Error signing out: ${error.message}`);
-    });
-}
-
-// ... (rest of the code remains the same)
-
-
-
-function signOut() {
-  auth.signOut()
-    .then(() => {
-      showPopup('You have been signed out.');
-      toggleElement('chat-input', false);
-      toggleElement('profile-menu', false, 'hidden');
-      toggleElement('sign-out-button', false);
-      document.getElementById('chat-messages').innerHTML = '';
-      toggleElement('login-container', true);
-      toggleElement('name-input', true);
-      toggleElement('chat-interface', false);
-      displaySystemMessage('You left the chat.', true);
 
       // Reload the page after successful sign-out
       window.location.reload();
