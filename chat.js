@@ -1,11 +1,9 @@
-import profaneWords from './profaneWords.js';
-
 // Chat-related functions
 let currentUser = null;
 
 function filterProfanity(text) {
-  const regex = new RegExp(profaneWords.join('|'), 'gi');
-  return text.replace(regex, match => '*'.repeat(match.length));
+  // Implement your profanity filter logic here
+  return text;
 }
 
 function sendMessage(message) {
