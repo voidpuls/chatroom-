@@ -52,6 +52,11 @@ function resetPassword() {
     });
 }
 
+// Placeholder for the signUp function
+function signUp() {
+  // Add your sign-up logic here
+}
+
 // Event listeners and main logic
 document.getElementById('sign-in-button').addEventListener('click', signIn);
 document.getElementById('sign-up-button').addEventListener('click', signUp);
