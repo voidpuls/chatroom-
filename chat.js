@@ -122,4 +122,3 @@ function displaySystemMessage(message) {
 document.getElementById('new-name-input').addEventListener('input', (event) => {
   updateUsername(event.target.value);
 });
-
