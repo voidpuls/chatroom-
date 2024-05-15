@@ -89,29 +89,60 @@ function joinChat(name) {
 
     usersCollection.doc(currentUser.uid).set(userData)
       .then(() => {
-        currentUser.updateProfile({
+        return currentUser.updateProfile({
           displayName: filteredName
-        })
-          .then(() => {
-            // Update the currentUser.displayName
-            currentUser.displayName = filteredName;
-            toggleElement('chat-input', true);
-            toggleElement('chat-messages', true);
-            toggleElement('name-input', false);
-            updateUsername(filteredName);
-            displaySystemMessage(`${filteredName} joined the chat.`);
-          })
-          .catch((error) => {
-            console.error('Error updating user profile:', error);
-          });
+        });
+      })
+      .then(() => {
+        currentUser.displayName = filteredName;
+        toggleElement('chat-input', true);
+        toggleElement('chat-messages', true);
+        toggleElement('name-input', false);
+        updateUsername(filteredName);
+        displaySystemMessage(`${filteredName} joined the chat.`);
       })
       .catch((error) => {
-        console.error('Error updating user data:', error);
+        console.error('Error updating user profile:', error);
       });
   } else if (currentUser) {
     showPopup('Please verify your email before joining the chat.');
   } else {
     showPopup('You must be signed in to join the chat.');
+  }
+}
+
+function changeUserName(newName) {
+  const filteredName = filterProfanity(newName);
+
+  if (filteredName !== newName) {
+    showPopup('Please choose a different name without profane words.');
+    return;
+  }
+
+  if (currentUser) {
+    const userData = {
+      displayName: filteredName,
+      email: currentUser.email
+    };
+
+    usersCollection.doc(currentUser.uid).set(userData)
+      .then(() => {
+        return currentUser.updateProfile({
+          displayName: filteredName
+        });
+      })
+      .then(() => {
+        currentUser.displayName = filteredName;
+        toggleElement('profile-menu', false);
+        updateUsername(filteredName);
+        displaySystemMessage(`${currentUser.displayName} changed their name to ${filteredName}.`);
+      })
+      .catch((error) => {
+        console.error('Error updating user profile:', error);
+        showPopup('An error occurred while updating your name. Please try again later.');
+      });
+  } else {
+    showPopup('You must be signed in to change your name.');
   }
 }
 
