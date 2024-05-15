@@ -4,10 +4,10 @@ let profaneWords = [];
 
 function readProfaneWords() {
   return new Promise((resolve, reject) => {
-    fetch('bad-word-list/words.txt')
+    fetch('/paste.txt') // Update the file path to '/paste.txt'
       .then(response => response.text())
       .then(data => {
-        profaneWords = data.split(/\s+/); // Split the file contents by whitespace characters
+        profaneWords = data.split(/\s+/);
         console.log('Profane words loaded:', profaneWords);
         resolve();
       })
@@ -17,6 +17,7 @@ function readProfaneWords() {
       });
   });
 }
+
 
 function filterProfanity(text) {
   const regex = new RegExp(profaneWords.join('|'), 'gi');
