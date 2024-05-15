@@ -22,6 +22,16 @@ function signIn() {
 function signOut() {
   auth.signOut()
     .then(() => {
+      showPopup('You have been signed out.');
+      toggleElement('chat-input', false);
+      toggleElement('profile-menu', false, 'hidden');
+      toggleElement('sign-out-button', false);
+      document.getElementById('chat-messages').innerHTML = '';
+      toggleElement('login-container', true);
+      toggleElement('name-input', true);
+      toggleElement('chat-interface', false);
+      displaySystemMessage('You left the chat.');
+
       // Reload the page after successful sign-out
       window.location.reload();
     })
@@ -29,27 +39,7 @@ function signOut() {
       showPopup(`Error signing out: ${error.message}`);
     });
 }
-  auth.createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      user.sendEmailVerification()
-        .then(() => {
-          return auth.signInWithEmailAndPassword(email, password);
-        })
-        .then(() => {
-          showPopup('Verification email sent. Please verify your email before joining the chat.');
-          updateUIBasedOnAuthState(user); // Update the UI based on the new user's authentication state
-          // Update the username display
-          updateUsername(name);
-        })
-        .catch((error) => {
-          console.error('Error sending verification email:', error);
-        });
-    })
-    .catch((error) => {
-      console.error('Error creating user:', error);
-    });
-}
+
 
 
 function resetPassword() {
