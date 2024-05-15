@@ -1,4 +1,7 @@
 // Function definitions
+import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, filterProfanity } from './chat.js';
+
+// Function definitions
 function signIn() {
   const email = document.getElementById('email-input').value;
   const password = document.getElementById('password-input').value;
@@ -58,6 +61,7 @@ function signUp() {
       console.error('Error creating user:', error);
     });
 }
+
 
 function resetPassword() {
   const email = document.getElementById('email-input').value;
