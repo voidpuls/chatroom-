@@ -147,12 +147,12 @@ function changeUserName(newName) {
   }
 }
 
-function updateUsername(name) {
+export function updateUsername(name) {
   const usernameDisplay = document.getElementById('username-display');
   usernameDisplay.textContent = name;
 }
 
-function displaySystemMessage(message) {
+export function displaySystemMessage(message) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('system-message');
   messageElement.textContent = message;
