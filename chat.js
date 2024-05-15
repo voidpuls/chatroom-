@@ -173,6 +173,17 @@ document.getElementById('new-name-input').addEventListener('input', (event) => {
   updateUsername(event.target.value);
 });
 
+// Add an event listener for the 'keydown' event on the 'message-input' field
+document.getElementById('message-input').addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') {
+    const message = document.getElementById('message-input').value.trim();
+    if (message) {
+      sendMessage(message);
+      document.getElementById('message-input').value = '';
+    }
+  }
+});
+
 function toggleElement(elementId, show, className) {
   const element = document.getElementById(elementId);
   if (element) {
