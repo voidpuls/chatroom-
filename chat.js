@@ -7,7 +7,7 @@ function readProfaneWords() {
     fetch('/paste.txt')
       .then(response => response.text())
       .then(data => {
-        profaneWords = data.split(/\s+/); // Split the file contents by whitespace characters
+        profaneWords = data.split(/\s+/);
         console.log('Profane words loaded:', profaneWords);
         resolve();
       })
@@ -93,6 +93,8 @@ function joinChat(name) {
           displayName: filteredName
         })
           .then(() => {
+            // Update the currentUser.displayName
+            currentUser.displayName = filteredName;
             toggleElement('chat-input', true);
             toggleElement('chat-messages', true);
             toggleElement('name-input', false);
@@ -133,6 +135,8 @@ function changeUserName(newName) {
           displayName: filteredName
         })
           .then(() => {
+            // Update the currentUser.displayName
+            currentUser.displayName = filteredName;
             toggleElement('profile-menu', false);
             updateUsername(filteredName);
             displaySystemMessage(`${currentUser.displayName} changed their name to ${filteredName}.`);
