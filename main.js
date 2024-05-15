@@ -30,12 +30,21 @@ function signUp() {
   const email = document.getElementById('email-input').value;
   const password = document.getElementById('password-input').value;
 
+  if (currentUser) {
+    showPopup('You are already signed in. Please sign out first to create a new account.');
+    return;
+  }
+
   auth.createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
       const user = userCredential.user;
       user.sendEmailVerification()
         .then(() => {
+          return auth.signInWithEmailAndPassword(email, password);
+        })
+        .then(() => {
           showPopup('Verification email sent. Please verify your email before joining the chat.');
+          updateUIBasedOnAuthState(user); // Update the UI based on the new user's authentication state
         })
         .catch((error) => {
           console.error('Error sending verification email:', error);
