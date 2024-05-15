@@ -29,15 +29,23 @@ function displayMessage(message) {
   senderElement.classList.add('sender');
   senderElement.textContent = message.sender;
 
+  const messageContentElement = document.createElement('div');
+  messageContentElement.classList.add('message-content');
+
   const textElement = document.createElement('p');
+  textElement.classList.add('message-text');
   textElement.textContent = message.text;
 
   const timestampElement = document.createElement('small');
-  timestampElement.textContent = new Date(message.timestamp.toDate()).toLocaleString();
+  timestampElement.classList.add('message-timestamp');
+  const timestamp = message.timestamp ? new Date(message.timestamp.toDate()).toLocaleString() : 'Unknown';
+  timestampElement.textContent = timestamp;
+
+  messageContentElement.appendChild(textElement);
+  messageContentElement.appendChild(timestampElement);
 
   messageElement.appendChild(senderElement);
-  messageElement.appendChild(textElement);
-  messageElement.appendChild(timestampElement);
+  messageElement.appendChild(messageContentElement);
 
   document.getElementById('chat-messages').appendChild(messageElement);
   toggleElement('chat-messages', true); // Show the chat messages container
