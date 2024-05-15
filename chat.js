@@ -1,5 +1,3 @@
-// chat.js
-import profaneWords from './profaneWords.js';
 import { showPopup } from './utils.js';
 
 // Chat-related functions
@@ -9,19 +7,10 @@ export function setCurrentUser(user) {
   currentUser = user;
 }
 
-export function filterProfanity(text) {
-  const regex = new RegExp(profaneWords.join('|'), 'gi');
-  const filteredText = text.replace(regex, match => '*'.repeat(match.length));
-  return profanityCleaner.clean(filteredText);
-}
-
-// ... (rest of the code remains the same)
-
-
 export function sendMessage(message) {
   if (currentUser) {
     const messageData = {
-      text: filterProfanity(message),
+      text: message,
       sender: currentUser.displayName,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     };
@@ -38,9 +27,6 @@ export function sendMessage(message) {
     showPopup('You must be signed in to send messages.');
   }
 }
-
-// ... (rest of the code remains the same)
-
 
 export function displayMessage(message) {
   const messageElement = document.createElement('div');
@@ -77,15 +63,8 @@ export function displayMessage(message) {
 }
 
 export function joinChat(name) {
-  const filteredName = filterProfanity(name);
-
-  if (filteredName !== name) {
-    showPopup('Please choose a different name without profane words.');
-    return;
-  }
-
   // Check if the name is already taken
-  usersCollection.where('displayName', '==', filteredName).get()
+  usersCollection.where('displayName', '==', name).get()
     .then((querySnapshot) => {
       if (!querySnapshot.empty) {
         showPopup('This name is already taken. Please choose a different name.');
@@ -94,22 +73,22 @@ export function joinChat(name) {
 
       if (currentUser && currentUser.emailVerified) {
         const userData = {
-          displayName: filteredName,
+          displayName: name,
           email: currentUser.email
         };
 
         usersCollection.doc(currentUser.uid).set(userData)
           .then(() => {
             return currentUser.updateProfile({
-              displayName: filteredName
+              displayName: name
             });
           })
           .then(() => {
             toggleElement('chat-input', true);
             toggleElement('chat-messages', true);
             toggleElement('name-input', false);
-            updateUsername(filteredName);
-            displaySystemMessage(`${filteredName} joined the chat.`, true);
+            updateUsername(name);
+            displaySystemMessage(`${name} joined the chat.`, true);
           })
           .catch((error) => {
             console.error('Error updating user profile:', error);
@@ -128,29 +107,22 @@ export function joinChat(name) {
 }
 
 export function changeUserName(newName) {
-  const filteredName = filterProfanity(newName);
-
-  if (filteredName !== newName) {
-    showPopup('Please choose a different name without profane words.');
-    return;
-  }
-
   if (currentUser) {
     const userData = {
-      displayName: filteredName,
+      displayName: newName,
       email: currentUser.email
     };
 
     usersCollection.doc(currentUser.uid).set(userData)
       .then(() => {
         return currentUser.updateProfile({
-          displayName: filteredName
+          displayName: newName
         });
       })
       .then(() => {
         toggleElement('profile-menu', false);
-        updateUsername(filteredName);
-        displaySystemMessage(`${currentUser.displayName} changed their name to ${filteredName}.`, true);
+        updateUsername(newName);
+        displaySystemMessage(`${currentUser.displayName} changed their name to ${newName}.`, true);
       })
       .catch((error) => {
         console.error('Error updating user profile:', error);
@@ -202,10 +174,16 @@ export function toggleElement(elementId, show, className) {
       if (className) {
         element.classList.remove(className);
       }
+      if (elementId === 'profile-menu') {
+        element.style.display = 'block';
+      }
     } else {
       element.classList.add('hidden');
       if (className) {
         element.classList.add(className);
+      }
+      if (elementId === 'profile-menu') {
+        element.style.display = 'none';
       }
     }
   }
