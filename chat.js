@@ -14,6 +14,7 @@ export function filterProfanity(text) {
   const filteredText = text.replace(regex, match => '*'.repeat(match.length));
   return profanityCleaner.clean(filteredText);
 }
+
 export function sendMessage(message) {
   if (currentUser) {
     const messageData = {
@@ -34,6 +35,9 @@ export function sendMessage(message) {
     showPopup('You must be signed in to send messages.');
   }
 }
+
+// ... (rest of the code remains the same)
+
 
 export function displayMessage(message) {
   const messageElement = document.createElement('div');
