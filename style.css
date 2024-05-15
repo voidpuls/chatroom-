@@ -184,6 +184,7 @@ body {
   z-index: 999;
   max-width: 400px;
   width: 100%;
+  display: none;
 }
 
 .profile-menu input {
