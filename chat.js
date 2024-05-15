@@ -1,5 +1,5 @@
 import profaneWords from './profaneWords.js';
-import profanityCleaner from './node_modules/profanity-cleaner';
+import profanityCleaner from './profanity-cleaner';
 import { showPopup } from './utils.js';
 
 // Chat-related functions
