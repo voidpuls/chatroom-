@@ -1,4 +1,6 @@
 import profaneWords from './profaneWords.js';
+import profanityCleaner from 'profanity-cleaner';
+import { showPopup } from './utils.js';
 
 // Chat-related functions
 let currentUser = null;
@@ -9,7 +11,8 @@ export function setCurrentUser(user) {
 
 export function filterProfanity(text) {
   const regex = new RegExp(profaneWords.join('|'), 'gi');
-  return text.replace(regex, match => '*'.repeat(match.length));
+  const filteredText = text.replace(regex, match => '*'.repeat(match.length));
+  return profanityCleaner.clean(filteredText);
 }
 
 export function sendMessage(message) {
@@ -96,12 +99,11 @@ export function joinChat(name) {
             });
           })
           .then(() => {
-            currentUser.displayName = filteredName;
             toggleElement('chat-input', true);
             toggleElement('chat-messages', true);
             toggleElement('name-input', false);
             updateUsername(filteredName);
-            displaySystemMessage(`${filteredName} joined the chat.`);
+            displaySystemMessage(`${filteredName} joined the chat.`, true);
           })
           .catch((error) => {
             console.error('Error updating user profile:', error);
@@ -142,7 +144,7 @@ export function changeUserName(newName) {
       .then(() => {
         toggleElement('profile-menu', false);
         updateUsername(filteredName);
-        displaySystemMessage(`${currentUser.displayName} changed their name to ${filteredName}.`);
+        displaySystemMessage(`${currentUser.displayName} changed their name to ${filteredName}.`, true);
       })
       .catch((error) => {
         console.error('Error updating user profile:', error);
@@ -158,9 +160,12 @@ export function updateUsername(name) {
   usernameDisplay.textContent = name;
 }
 
-export function displaySystemMessage(message) {
+export function displaySystemMessage(message, isGlobal = false) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('system-message');
+  if (isGlobal) {
+    messageElement.classList.add('global-message');
+  }
   messageElement.textContent = message;
   document.getElementById('chat-messages').appendChild(messageElement);
   toggleElement('chat-messages', true); // Show the chat messages container
