@@ -110,7 +110,8 @@ function updateUIBasedOnAuthState(user) {
   if (user && user.emailVerified) {
     toggleElement('login-container', false);
     toggleElement('name-input', false);
-    toggleElement('chat-interface', true);
+    const chatInterface = document.querySelector('.chat-interface');
+    chatInterface.classList.add('show'); // Add the 'show' class to display the chat interface
     toggleElement('sign-out-button', true);
     toggleElement('chat-input', true);
     toggleElement('profile-menu', true, 'hidden');
@@ -120,16 +121,19 @@ function updateUIBasedOnAuthState(user) {
   } else if (user) {
     toggleElement('login-container', true);
     toggleElement('name-input', true);
-    toggleElement('chat-interface', false);
+    const chatInterface = document.querySelector('.chat-interface');
+    chatInterface.classList.remove('show'); // Remove the 'show' class to hide the chat interface
     showPopup('Please verify your email before joining the chat.');
   } else {
     toggleElement('login-container', true);
     toggleElement('name-input', true);
-    toggleElement('chat-interface', false);
+    const chatInterface = document.querySelector('.chat-interface');
+    chatInterface.classList.remove('show'); // Remove the 'show' class to hide the chat interface
     document.getElementById('chat-messages').innerHTML = '';
     showPopup('You are not logged in.');
   }
 }
+
 
 function toggleElement(elementId, show, className) {
   const element = document.getElementById(elementId);
