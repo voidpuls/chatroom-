@@ -1,5 +1,5 @@
 import profaneWords from './profaneWords.js';
-import profanityCleaner from 'profanity-cleaner';
+import profanityCleaner from './node_modules/profanity-cleaner/dist/profanity-cleaner.esm.js';
 import { showPopup } from './utils.js';
 
 // Chat-related functions
@@ -14,7 +14,6 @@ export function filterProfanity(text) {
   const filteredText = text.replace(regex, match => '*'.repeat(match.length));
   return profanityCleaner.clean(filteredText);
 }
-
 export function sendMessage(message) {
   if (currentUser) {
     const messageData = {
