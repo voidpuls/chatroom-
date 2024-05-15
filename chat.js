@@ -1,22 +1,7 @@
+import profaneWords from './profaneWords.js';
+
 // Chat-related functions
 let currentUser = null;
-let profaneWords = [];
-
-function readProfaneWords() {
-  return new Promise((resolve, reject) => {
-    fetch('/paste.txt')
-      .then(response => response.text())
-      .then(data => {
-        profaneWords = data.split(/\s+/);
-        console.log('Profane words loaded:', profaneWords);
-        resolve();
-      })
-      .catch(error => {
-        console.error('Error reading profane words:', error);
-        reject(error);
-      });
-  });
-}
 
 function filterProfanity(text) {
   const regex = new RegExp(profaneWords.join('|'), 'gi');
@@ -85,34 +70,46 @@ function joinChat(name) {
     return;
   }
 
-  if (currentUser && currentUser.emailVerified) {
-    const userData = {
-      displayName: filteredName,
-      email: currentUser.email
-    };
+  // Check if the name is already taken
+  usersCollection.where('displayName', '==', filteredName).get()
+    .then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        showPopup('This name is already taken. Please choose a different name.');
+        return;
+      }
 
-    usersCollection.doc(currentUser.uid).set(userData)
-      .then(() => {
-        return currentUser.updateProfile({
-          displayName: filteredName
-        });
-      })
-      .then(() => {
-        currentUser.displayName = filteredName;
-        toggleElement('chat-input', true);
-        toggleElement('chat-messages', true);
-        toggleElement('name-input', false);
-        updateUsername(filteredName);
-        displaySystemMessage(`${filteredName} joined the chat.`);
-      })
-      .catch((error) => {
-        console.error('Error updating user profile:', error);
-      });
-  } else if (currentUser) {
-    showPopup('Please verify your email before joining the chat.');
-  } else {
-    showPopup('You must be signed in to join the chat.');
-  }
+      if (currentUser && currentUser.emailVerified) {
+        const userData = {
+          displayName: filteredName,
+          email: currentUser.email
+        };
+
+        usersCollection.doc(currentUser.uid).set(userData)
+          .then(() => {
+            return currentUser.updateProfile({
+              displayName: filteredName
+            });
+          })
+          .then(() => {
+            currentUser.displayName = filteredName;
+            toggleElement('chat-input', true);
+            toggleElement('chat-messages', true);
+            toggleElement('name-input', false);
+            updateUsername(filteredName);
+            displaySystemMessage(`${filteredName} joined the chat.`);
+          })
+          .catch((error) => {
+            console.error('Error updating user profile:', error);
+          });
+      } else if (currentUser) {
+        showPopup('Please verify your email before joining the chat.');
+      } else {
+        showPopup('You must be signed in to join the chat.');
+      }
+    })
+    .catch((error) => {
+      console.error('Error checking name availability:', error);
+    });
 }
 
 function changeUserName(newName) {
@@ -150,46 +147,6 @@ function changeUserName(newName) {
   }
 }
 
-function changeUserName(newName) {
-  const filteredName = filterProfanity(newName);
-
-  if (filteredName !== newName) {
-    showPopup('Please choose a different name without profane words.');
-    return;
-  }
-
-  if (currentUser) {
-    const userData = {
-      displayName: filteredName,
-      email: currentUser.email
-    };
-
-    usersCollection.doc(currentUser.uid).set(userData)
-      .then(() => {
-        currentUser.updateProfile({
-          displayName: filteredName
-        })
-          .then(() => {
-            // Update the currentUser.displayName
-            currentUser.displayName = filteredName;
-            toggleElement('profile-menu', false);
-            updateUsername(filteredName);
-            displaySystemMessage(`${currentUser.displayName} changed their name to ${filteredName}.`);
-          })
-          .catch((error) => {
-            console.error('Error updating user profile:', error);
-            showPopup('An error occurred while updating your name. Please try again later.');
-          });
-      })
-      .catch((error) => {
-        console.error('Error updating user data:', error);
-        showPopup('An error occurred while updating your name. Please try again later.');
-      });
-  } else {
-    showPopup('You must be signed in to change your name.');
-  }
-}
-
 function updateUsername(name) {
   const usernameDisplay = document.getElementById('username-display');
   usernameDisplay.textContent = name;
@@ -219,7 +176,6 @@ document.getElementById('message-input').addEventListener('keydown', (event) => 
     }
   }
 });
-
 
 function toggleElement(elementId, show, className) {
   const element = document.getElementById(elementId);
