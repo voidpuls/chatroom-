@@ -34,11 +34,11 @@ function displayMessage(message) {
 
   const textElement = document.createElement('p');
   textElement.classList.add('message-text');
-  textElement.textContent = message.text;
+  textElement.textContent = filterProfanity(message.text);
 
   const timestampElement = document.createElement('small');
   timestampElement.classList.add('message-timestamp');
-  const timestamp = message.timestamp ? new Date(message.timestamp.toDate()).toLocaleString() : 'Unknown';
+  const timestamp = message.timestamp ? new Date(message.timestamp.toDate()).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' }) : 'Unknown';
   timestampElement.textContent = timestamp;
 
   messageContentElement.appendChild(textElement);
@@ -48,7 +48,7 @@ function displayMessage(message) {
   messageElement.appendChild(messageContentElement);
 
   document.getElementById('chat-messages').appendChild(messageElement);
-  toggleElement('chat-messages', true); // Show the chat messages container
+  toggleElement('chat-messages', true);
 }
 
 function joinChat(name) {
@@ -103,14 +103,18 @@ function changeUserName(newName) {
           })
           .catch((error) => {
             console.error('Error updating user profile:', error);
+            showPopup('An error occurred while updating your name. Please try again later.');
           });
       })
       .catch((error) => {
         console.error('Error updating user data:', error);
+        showPopup('An error occurred while updating your name. Please try again later.');
       });
   } else {
     showPopup('You must be signed in to change your name.');
   }
+}
+
 }
 
 function updateUsername(name) {
