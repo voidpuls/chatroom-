@@ -2,21 +2,21 @@
 let currentUser = null;
 let profaneWords = [];
 
-// Function to read the contents of the paste.txt file
 function readProfaneWords() {
-  fetch('bad-word-list/words.txt')
-    .then(response => response.text())
-    .then(data => {
-      profaneWords = data.split(/\s+/); // Split the file contents by whitespace characters
-      console.log('Profane words loaded:', profaneWords);
-    })
-    .catch(error => {
-      console.error('Error reading profane words:', error);
-    });
+  return new Promise((resolve, reject) => {
+    fetch('bad-word-list/words.txt')
+      .then(response => response.text())
+      .then(data => {
+        profaneWords = data.split(/\s+/); // Split the file contents by whitespace characters
+        console.log('Profane words loaded:', profaneWords);
+        resolve();
+      })
+      .catch(error => {
+        console.error('Error reading profane words:', error);
+        reject(error);
+      });
+  });
 }
-
-// Call the readProfaneWords function when the script loads
-readProfaneWords();
 
 function filterProfanity(text) {
   const regex = new RegExp(profaneWords.join('|'), 'gi');
@@ -26,7 +26,7 @@ function filterProfanity(text) {
 function sendMessage(message) {
   if (currentUser) {
     const messageData = {
-      text: message,
+      text: filterProfanity(message),
       sender: currentUser.displayName,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     };
@@ -56,7 +56,7 @@ function displayMessage(message) {
 
   const textElement = document.createElement('p');
   textElement.classList.add('message-text');
-  textElement.textContent = filterProfanity(message.text);
+  textElement.textContent = message.text;
 
   const timestampElement = document.createElement('small');
   timestampElement.classList.add('message-timestamp');
@@ -70,7 +70,7 @@ function displayMessage(message) {
   messageElement.appendChild(messageContentElement);
 
   document.getElementById('chat-messages').appendChild(messageElement);
-  toggleElement('chat-messages', true);
+  toggleElement('chat-messages', true); // Show the chat messages container
 }
 
 function joinChat(name) {
