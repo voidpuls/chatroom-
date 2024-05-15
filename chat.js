@@ -177,7 +177,7 @@ document.getElementById('message-input').addEventListener('keydown', (event) => 
   }
 });
 
-function toggleElement(elementId, show, className) {
+export function toggleElement(elementId, show, className) {
   const element = document.getElementById(elementId);
   if (element) {
     if (show) {
