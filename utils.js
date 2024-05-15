@@ -30,3 +30,18 @@ export function showPopup(message) {
     popupContent.querySelector('p').textContent = message;
   }
 }
+
+// Utility functions
+function showElement(elementId) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.style.display = 'block';
+  }
+}
+
+function hideElement(elementId) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.style.display = 'none';
+  }
+}
