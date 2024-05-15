@@ -5,7 +5,6 @@ let currentUser = null;
 import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, filterProfanity, sendMessage, setCurrentUser } from './chat.js';
 import { showPopup } from './utils.js'; // Import the showPopup function
 
-
 // Function definitions
 function signIn() {
   const email = document.getElementById('email-input').value;
@@ -35,7 +34,7 @@ function signOut() {
       toggleElement('login-container', true);
       toggleElement('name-input', true);
       toggleElement('chat-interface', false);
-      displaySystemMessage('You left the chat.');
+      displaySystemMessage('You left the chat.', true);
 
       // Reload the page after successful sign-out
       window.location.reload();
