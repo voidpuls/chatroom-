@@ -3,6 +3,10 @@ import profaneWords from './profaneWords.js';
 // Chat-related functions
 let currentUser = null;
 
+export function setCurrentUser(user) {
+  currentUser = user;
+}
+
 export function filterProfanity(text) {
   const regex = new RegExp(profaneWords.join('|'), 'gi');
   return text.replace(regex, match => '*'.repeat(match.length));
