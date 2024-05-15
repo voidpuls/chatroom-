@@ -140,7 +140,6 @@ export function changeUserName(newName) {
         });
       })
       .then(() => {
-        currentUser.displayName = filteredName;
         toggleElement('profile-menu', false);
         updateUsername(filteredName);
         displaySystemMessage(`${currentUser.displayName} changed their name to ${filteredName}.`);
