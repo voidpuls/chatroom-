@@ -13,6 +13,7 @@
     "firebase": "^10.11.1",
     "firebase-tools": "^13.8.2",
     "next": "13.2.4",
+    "profanity-cleaner": "^0.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "socket.io": "^4.6.1",
