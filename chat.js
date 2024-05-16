@@ -13,12 +13,13 @@ function filterProfanity(message) {
   return message.replace(regex, match => '*'.repeat(match.length));
 }
 
-export function sendMessage(message) {
+export function sendMessage(message, type = 'text') {
   if (currentUser) {
-    const filteredMessage = filterProfanity(message);
+    const filteredMessage = type === 'text' ? filterProfanity(message) : message;
     const messageData = {
-      text: filteredMessage,
+      content: filteredMessage,
       sender: currentUser.displayName,
+      type: type,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     };
 
@@ -46,16 +47,23 @@ export function displayMessage(message) {
   const messageContentElement = document.createElement('div');
   messageContentElement.classList.add('message-content');
 
-  const textElement = document.createElement('p');
-  textElement.classList.add('message-text');
-  textElement.textContent = message.text;
+  if (message.type === 'text') {
+    const textElement = document.createElement('p');
+    textElement.classList.add('message-text');
+    textElement.textContent = message.content;
+    messageContentElement.appendChild(textElement);
+  } else if (message.type === 'image') {
+    const imageElement = document.createElement('img');
+    imageElement.src = message.content;
+    imageElement.classList.add('message-image');
+    messageContentElement.appendChild(imageElement);
+  }
 
   const timestampElement = document.createElement('small');
   timestampElement.classList.add('message-timestamp');
   const timestamp = message.timestamp ? message.timestamp.toDate().toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' }) : 'Unknown';
   timestampElement.textContent = timestamp;
 
-  messageContentElement.appendChild(textElement);
   messageContentElement.appendChild(timestampElement);
 
   messageElement.appendChild(senderElement);
