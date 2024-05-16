@@ -1,8 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"; // Import the Firebase Storage moduleconst firebaseConfig = {
+// Initialize Firebase
+const firebaseConfig = {
   apiKey: "AIzaSyDisnhcjYmvZc2y9-toeWWKHq9nHYb8Fn4",
   authDomain: "chatroom-50dfb.firebaseapp.com",
   databaseURL: "https://chatroom-50dfb-default-rtdb.firebaseio.com",
@@ -15,8 +12,7 @@ import { getStorage } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-st
 
 firebase.initializeApp(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth(app);
-const firestore = getFirestore(app);
-const storage = getStorage(app); // Initialize the Firebase Storage service
+const auth = firebase.auth();
+const firestore = firebase.firestore();
+const messagesCollection = firestore.collection('messages');
+const usersCollection = firestore.collection('users');
