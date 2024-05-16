@@ -117,9 +117,13 @@ export function displayMessage(message) {
   // Scroll to the bottom of the chat area
   chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 
-  function playSound(soundAudio) {
-    const audio = new Audio('/scream.mp3');
-    audio.play();
+  function playSound(soundFile) {
+    const audioUrl = window.location.origin + '/' + soundFile;
+    const audio = new Audio(audioUrl);
+    audio.play()
+      .catch(error => {
+        console.error('Error playing sound:', error);
+      });
   }
 }
 export function joinChat(name) {
