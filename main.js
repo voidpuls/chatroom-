@@ -1,4 +1,3 @@
-document.addEventListener('DOMContentLoaded', () => {
 // Declare and initialize the currentUser variable
 let currentUser = null;
 
@@ -10,6 +9,7 @@ import { showPopup } from './utils.js'; // Import the showPopup function
 function signIn() {
   const email = document.getElementById('email-input').value;
   const password = document.getElementById('password-input').value;
+  // const name = document.getElementById('name-input').value.trim(); // Remove this line
 
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
@@ -23,6 +23,7 @@ function signIn() {
     });
 }
 
+
 function signOut() {
   auth.signOut()
     .then(() => {
@@ -34,7 +35,7 @@ function signOut() {
       toggleElement('login-container', true);
       toggleElement('name-input', true);
       toggleElement('chat-interface', false);
-      displaySystemMessage('You left the chat.', true); // Display a global message
+      displaySystemMessage('You left the chat.', true);
 
       // Reload the page after successful sign-out
       window.location.reload();
@@ -145,4 +146,3 @@ function toggleElement(elementId, show, className) {
     }
   }
 }
-)};
