@@ -238,3 +238,6 @@ body {
   max-height: 200px;
   margin-bottom: 10px;
 }
+#drop-area.highlight {
+  border: 2px dashed #000;
+}
