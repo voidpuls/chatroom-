@@ -11,9 +11,14 @@ function signIn() {
   const password = document.getElementById('password-input').value;
 
   auth.signInWithEmailAndPassword(email, password)
-    .then(() => {
-      // Reload the page after successful sign-in
-      window.location.reload();
+    .then((userCredential) => {
+      // Check if the user's email is verified
+      if (userCredential.user.emailVerified) {
+        // Reload the page after successful sign-in
+        window.location.reload();
+      } else {
+        showPopup('Please verify your email before signing in.');
+      }
       // Update the username display with a placeholder value
       updateUsername('User');
     })
@@ -56,9 +61,29 @@ function resetPassword() {
     });
 }
 
-// Placeholder for the signUp function
 function signUp() {
-  // Add your sign-up logic here
+  const email = document.getElementById('email-input').value;
+  const password = document.getElementById('password-input').value;
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      // User signed up successfully
+      const user = userCredential.user;
+      showPopup(`User ${user.email} signed up successfully!`);
+
+      // Send a verification email
+      user.sendEmailVerification().then(() => {
+        showPopup('Verification email sent. Please check your inbox and verify your email address.');
+        // Reload the page after successful sign-up and email verification
+        window.location.reload();
+      }).catch((error) => {
+        console.error('Error sending verification email:', error);
+      });
+    })
+    .catch((error) => {
+      // Handle sign-up error
+      showPopup(`Error signing up: ${error.message}`);
+    });
 }
 
 function updateUIBasedOnAuthState(user) {
