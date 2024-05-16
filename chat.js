@@ -37,7 +37,6 @@ export function sendMessage(message, type = 'text', replyTo = null) {
   }
 }
 
-
 export function displayMessage(message) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message');
@@ -83,7 +82,11 @@ export function displayMessage(message) {
         event.preventDefault();
         const replyMessage = messageInput.value.trim();
         if (replyMessage) {
+          const mentionedUser = replyMessage.includes(`@${currentUser.displayName}`);
           sendMessage(replyMessage.replace(`@${message.sender} `, ''), 'text', message);
+          if (mentionedUser) {
+            playSound('mention.mp3'); // Play the mention sound
+          }
           messageInput.value = '';
           messageInput.removeEventListener('keydown', handleReplyKeydown);
         }
@@ -111,7 +114,6 @@ export function displayMessage(message) {
   // Scroll to the bottom of the chat area
   chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 }
-
 
 export function joinChat(name) {
   // Check if the name is already taken
@@ -195,7 +197,7 @@ export function displaySystemMessage(message, isGlobal = false) {
   if (isGlobal) {
     messageElement.classList.add('global-message');
   }
-  messageElement.textContent = message;
+  messageElement.textContent = `System: ${message}`;
   document.getElementById('chat-messages').appendChild(messageElement);
   toggleElement('chat-messages', true); // Show the chat messages container
 }
@@ -238,4 +240,9 @@ export function toggleElement(elementId, show, className) {
       }
     }
   }
+}
+
+function playSound(soundFile) {
+  const audio = new Audio(soundFile);
+  audio.play();
 }
