@@ -113,13 +113,7 @@ export function displayMessage(message) {
   chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 }
 
-function playSound() {
-  const audioUrl = './scream.mp3'; // Relative path to the audio file
-  const audio = new Audio(audioUrl);
-  audio.play().catch((error) => {
-    console.error('Error playing sound:', error);
-  });
-}
+
 
 function showNotification(sender, message) {
   if (Notification.permission === 'granted') {
