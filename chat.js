@@ -117,7 +117,7 @@ export function displayMessage(message) {
   // Scroll to the bottom of the chat area
   chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 
-  function playSound('/scream.mp3') {
+  function playSound(soundAudio) {
     const audio = new Audio('/scream.mp3');
     audio.play();
   }
