@@ -13,6 +13,47 @@ function filterProfanity(message) {
   return message.replace(regex, match => '*'.repeat(match.length));
 }
 
+function resizeImage(file, maxWidth, maxHeight) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const width = img.width;
+      const height = img.height;
+
+      let newWidth = width;
+      let newHeight = height;
+
+      if (width > maxWidth || height > maxHeight) {
+        const aspectRatio = width / height;
+        if (width > height) {
+          newWidth = maxWidth;
+          newHeight = Math.round(newWidth / aspectRatio);
+        } else {
+          newHeight = maxHeight;
+          newWidth = Math.round(newHeight * aspectRatio);
+        }
+      }
+
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+      ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+      canvas.toBlob(
+        (blob) => {
+          const resizedFile = new File([blob], file.name, { type: file.type });
+          resolve(resizedFile);
+        },
+        file.type,
+        0.8
+      );
+    };
+    img.onerror = reject;
+  });
+}
+
 export function sendMessage(message, file = null) {
   if (currentUser) {
     const filteredMessage = filterProfanity(message);
@@ -58,55 +99,19 @@ export function sendMessage(message, file = null) {
           showPopup('An error occurred while resizing the image. Please try again later.');
         });
     } else {
-      // Code for sending text messages
+      messagesCollection.add(messageData)
+        .then(() => {
+          document.getElementById('message-input').value = '';
+        })
+        .catch((error) => {
+          console.error('Error sending message:', error);
+          showPopup('An error occurred while sending the message. Please try again later.');
+        });
     }
   } else {
     showPopup('You must be signed in to send messages.');
   }
 }
-
-function resizeImage(file, maxWidth, maxHeight) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.src = URL.createObjectURL(file);
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const width = img.width;
-      const height = img.height;
-
-      let newWidth = width;
-      let newHeight = height;
-
-      if (width > maxWidth || height > maxHeight) {
-        const aspectRatio = width / height;
-        if (width > height) {
-          newWidth = maxWidth;
-          newHeight = Math.round(newWidth / aspectRatio);
-        } else {
-          newHeight = maxHeight;
-          newWidth = Math.round(newHeight * aspectRatio);
-        }
-      }
-
-      canvas.width = newWidth;
-      canvas.height = newHeight;
-      ctx.drawImage(img, 0, 0, newWidth, newHeight);
-
-      canvas.toBlob(
-        (blob) => {
-          const resizedFile = new File([blob], file.name, { type: file.type });
-          resolve(resizedFile);
-        },
-        file.type,
-        0.8
-      );
-    };
-    img.onerror = reject;
-  });
-}
-
-
 
 export function displayMessage(message) {
   const messageElement = document.createElement('div');
