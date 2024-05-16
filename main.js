@@ -9,7 +9,6 @@ import { showPopup } from './utils.js'; // Import the showPopup function
 function signIn() {
   const email = document.getElementById('email-input').value;
   const password = document.getElementById('password-input').value;
-  // const name = document.getElementById('name-input').value.trim(); // Remove this line
 
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
@@ -22,7 +21,6 @@ function signIn() {
       showPopup(`Error signing in: ${error.message}`);
     });
 }
-
 
 function signOut() {
   auth.signOut()
@@ -61,46 +59,6 @@ function resetPassword() {
 function signUp() {
   // Add your sign-up logic here
 }
-
-// Event listeners and main logic
-document.getElementById('sign-in-button').addEventListener('click', signIn);
-document.getElementById('sign-up-button').addEventListener('click', signUp);
-document.getElementById('reset-password-button').addEventListener('click', resetPassword);
-document.getElementById('send-button').addEventListener('click', () => {
-  const message = document.getElementById('message-input').value.trim();
-  if (message) {
-    sendMessage(message);
-    document.getElementById('message-input').value = '';
-  }
-});
-document.getElementById('change-name-button').addEventListener('click', () => {
-  toggleElement('profile-menu', true);
-});
-document.getElementById('save-name-button').addEventListener('click', () => {
-  const newName = document.getElementById('new-name-input').value.trim();
-  if (newName) {
-    changeUserName(newName);
-  } else {
-    showPopup('Please enter a new name.');
-  }
-});
-document.getElementById('sign-out-button').addEventListener('click', signOut);
-
-// Initialize Firebase and set up event listeners for real-time updates
-firebase.auth().onAuthStateChanged((user) => {
-  currentUser = user;
-  setCurrentUser(user); // Set the currentUser in the chat.js module
-  updateUIBasedOnAuthState(user);
-});
-
-messagesCollection.orderBy('timestamp')
-  .onSnapshot((snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      if (change.type === 'added') {
-        displayMessage(change.doc.data());
-      }
-    });
-  });
 
 function updateUIBasedOnAuthState(user) {
   if (user && user.emailVerified) {
@@ -146,3 +104,49 @@ function toggleElement(elementId, show, className) {
     }
   }
 }
+
+// Wrap your code inside a function
+function initializeApp() {
+  // Event listeners and main logic
+  document.getElementById('sign-in-button').addEventListener('click', signIn);
+  document.getElementById('sign-up-button').addEventListener('click', signUp);
+  document.getElementById('reset-password-button').addEventListener('click', resetPassword);
+  document.getElementById('send-button').addEventListener('click', () => {
+    const message = document.getElementById('message-input').value.trim();
+    if (message) {
+      sendMessage(message);
+      document.getElementById('message-input').value = '';
+    }
+  });
+  document.getElementById('change-name-button').addEventListener('click', () => {
+    toggleElement('profile-menu', true);
+  });
+  document.getElementById('save-name-button').addEventListener('click', () => {
+    const newName = document.getElementById('new-name-input').value.trim();
+    if (newName) {
+      changeUserName(newName);
+    } else {
+      showPopup('Please enter a new name.');
+    }
+  });
+  document.getElementById('sign-out-button').addEventListener('click', signOut);
+
+  // Initialize Firebase and set up event listeners for real-time updates
+  firebase.auth().onAuthStateChanged((user) => {
+    currentUser = user;
+    setCurrentUser(user); // Set the currentUser in the chat.js module
+    updateUIBasedOnAuthState(user);
+  });
+
+  messagesCollection.orderBy('timestamp')
+    .onSnapshot((snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'added') {
+          displayMessage(change.doc.data());
+        }
+      });
+    });
+}
+
+// Call the initializeApp function when the DOM is ready
+document.addEventListener('DOMContentLoaded', initializeApp);
