@@ -117,25 +117,6 @@ export function displayMessage(message) {
   // Scroll to the bottom of the chat area
   chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 }
-  // Display replied message
-  if (message.replyTo) {
-    const repliedMessageElement = document.createElement('div');
-    repliedMessageElement.classList.add('replied-message');
-    repliedMessageElement.textContent = `Replying to ${message.replyTo.sender}: ${message.replyTo.content}`;
-    messageContentElement.insertBefore(repliedMessageElement, messageContentElement.firstChild);
-  }
-
-  messageElement.appendChild(senderElement);
-  messageElement.appendChild(messageContentElement);
-
-  const chatMessagesContainer = document.getElementById('chat-messages');
-  chatMessagesContainer.appendChild(messageElement);
-  toggleElement('chat-messages', true); // Show the chat messages container
-
-  // Scroll to the bottom of the chat area
-  chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
-}
-
 export function joinChat(name) {
   // Check if the name is already taken
   usersCollection.where('displayName', '==', name).get()
