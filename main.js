@@ -3,7 +3,7 @@ let currentUser = null;
 const signContainer = document.getElementById("login-container");
 
 // Function definitions
-import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, sendMessage, setCurrentUser } from './chat.js';
+import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, sendMessage, sendImage, setCurrentUser } from './chat.js';
 import { showPopup } from './utils.js'; // Import the showPopup function
 
 // Function definitions
@@ -65,6 +65,7 @@ function signUp() {
       // User signed up successfully
       const user = userCredential.user;
       showPopup(`User ${user.email} signed up successfully!`);
+      signContainer.style.display = "none"; // Hide the sign-in container
 
       // Optional: Send a verification email
       user.sendEmailVerification().then(() => {
@@ -133,6 +134,7 @@ function initializeApp() {
   const changeNameButton = document.getElementById('change-name-button');
   const saveNameButton = document.getElementById('save-name-button');
   const signOutButton = document.getElementById('sign-out-button');
+  const sendImageButton = document.getElementById('send-image-button');
 
   // Add event listeners only if the elements exist
   if (signInButton !== null) {
@@ -200,6 +202,20 @@ function initializeApp() {
     signOutButton.addEventListener('click', signOut);
   } else {
     console.log('sign-out-button element not found');
+  }
+
+  if (sendImageButton !== null) {
+    sendImageButton.addEventListener('click', () => {
+      const imageInput = document.getElementById('image-input');
+      if (imageInput.files.length > 0) {
+        const file = imageInput.files[0];
+        sendImage(file);
+      } else {
+        showPopup('Please select an image file to send.');
+      }
+    });
+  } else {
+    console.log('send-image-button element not found');
   }
 
   // Initialize Firebase and set up event listeners for real-time updates
