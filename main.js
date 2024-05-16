@@ -224,6 +224,86 @@ function initializeApp() {
         }
       });
     });
+
+  // Add event listener for image upload
+  const imageInput = document.getElementById('image-input');
+  if (imageInput) {
+    imageInput.addEventListener('change', handleImageUpload);
+  }
+
+  // Add event listener for drag and drop
+  const chatMessagesContainer = document.getElementById('chat-messages');
+  if (chatMessagesContainer) {
+    chatMessagesContainer.addEventListener('dragover', handleDragOver, false);
+    chatMessagesContainer.addEventListener('drop', handleDrop, false);
+  }
+}
+
+// Function to handle image upload
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    resizeAndSendImage(file);
+  }
+}
+
+// Function to resize and send the image
+function resizeAndSendImage(file) {
+  const maxWidth = 1000;
+  const maxHeight = 1000;
+
+  const img = new Image();
+  img.src = URL.createObjectURL(file);
+
+  img.onload = function () {
+    let width = img.width;
+    let height = img.height;
+
+    if (width > maxWidth || height > maxHeight) {
+      if (width > height) {
+        height *= maxWidth / width;
+        width = maxWidth;
+      } else {
+        width *= maxHeight / height;
+        height = maxHeight;
+      }
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, width, height);
+
+    canvas.toBlob(
+      (blob) => {
+        const storageRef = firebase.storage().ref();
+        const imageRef = storageRef.child(`images/${file.name}`);
+
+        imageRef.put(blob).then((snapshot) => {
+          snapshot.ref.getDownloadURL().then((downloadURL) => {
+            sendMessage(downloadURL, 'image');
+          });
+        });
+      },
+      file.type,
+      0.8
+    );
+  };
+}
+
+// Function to handle drag and drop events
+function handleDragOver(event) {
+  event.preventDefault();
+}
+
+function handleDrop(event) {
+  event.preventDefault();
+  const file = event.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+    resizeAndSendImage(file);
+  }
 }
 
 // Call the initializeApp function when the DOM is ready
