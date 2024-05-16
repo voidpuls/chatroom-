@@ -67,7 +67,7 @@ function signUp() {
       showPopup(`User ${user.email} signed up successfully!`);
       signContainer.style.display = "none"; // Hide the sign-in container
 
-      // Optional: Send a verification email
+      // Send a verification email
       user.sendEmailVerification().then(() => {
         showPopup('Verification email sent. Please check your inbox and verify your email address.');
       }).catch((error) => {
@@ -134,7 +134,6 @@ function initializeApp() {
   const changeNameButton = document.getElementById('change-name-button');
   const saveNameButton = document.getElementById('save-name-button');
   const signOutButton = document.getElementById('sign-out-button');
-  const sendImageButton = document.getElementById('send-image-button');
 
   // Add event listeners only if the elements exist
   if (signInButton !== null) {
@@ -158,14 +157,17 @@ function initializeApp() {
   if (sendButton !== null) {
     sendButton.addEventListener('click', () => {
       const messageInput = document.getElementById('message-input');
-      if (messageInput !== null) {
+      const imageInput = document.getElementById('image-input');
+      if (messageInput !== null && imageInput !== null) {
         const message = messageInput.value.trim();
-        if (message) {
-          sendMessage(message);
+        const file = imageInput.files.length > 0 ? imageInput.files[0] : null;
+        if (message || file) {
+          sendMessage(message, file);
           messageInput.value = '';
+          imageInput.value = '';
         }
       } else {
-        console.log('message-input element not found');
+        console.log('message-input or image-input element not found');
       }
     });
   } else {
@@ -202,20 +204,6 @@ function initializeApp() {
     signOutButton.addEventListener('click', signOut);
   } else {
     console.log('sign-out-button element not found');
-  }
-
-  if (sendImageButton !== null) {
-    sendImageButton.addEventListener('click', () => {
-      const imageInput = document.getElementById('image-input');
-      if (imageInput.files.length > 0) {
-        const file = imageInput.files[0];
-        sendImage(file);
-      } else {
-        showPopup('Please select an image file to send.');
-      }
-    });
-  } else {
-    console.log('send-image-button element not found');
   }
 
   // Initialize Firebase and set up event listeners for real-time updates
