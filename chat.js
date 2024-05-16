@@ -13,14 +13,15 @@ function filterProfanity(message) {
   return message.replace(regex, match => '*'.repeat(match.length));
 }
 
-export function sendMessage(message, type = 'text') {
+export function sendMessage(message, type = 'text', replyTo = null) {
   if (currentUser) {
     const filteredMessage = type === 'text' ? filterProfanity(message) : message;
     const messageData = {
       content: filteredMessage,
       sender: currentUser.displayName,
       type: type,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      replyTo: replyTo // Add the replyTo property
     };
 
     messagesCollection.add(messageData)
@@ -35,6 +36,7 @@ export function sendMessage(message, type = 'text') {
     showPopup('You must be signed in to send messages.');
   }
 }
+
 
 export function displayMessage(message) {
   const messageElement = document.createElement('div');
@@ -66,6 +68,39 @@ export function displayMessage(message) {
 
   messageContentElement.appendChild(timestampElement);
 
+  // Add reply button
+  const replyButton = document.createElement('button');
+  replyButton.classList.add('reply-button');
+  replyButton.textContent = 'Reply';
+  replyButton.addEventListener('click', () => {
+    const messageInput = document.getElementById('message-input');
+    messageInput.value = `@${message.sender} `;
+    messageInput.focus();
+    messageInput.addEventListener('keydown', handleReplyKeydown);
+
+    function handleReplyKeydown(event) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        const replyMessage = messageInput.value.trim();
+        if (replyMessage) {
+          sendMessage(replyMessage.replace(`@${message.sender} `, ''), 'text', message);
+          messageInput.value = '';
+          messageInput.removeEventListener('keydown', handleReplyKeydown);
+        }
+      }
+    }
+  });
+
+  messageContentElement.appendChild(replyButton);
+
+  // Display replied message
+  if (message.replyTo) {
+    const repliedMessageElement = document.createElement('div');
+    repliedMessageElement.classList.add('replied-message');
+    repliedMessageElement.textContent = `Replying to ${message.replyTo.sender}: ${message.replyTo.content}`;
+    messageContentElement.insertBefore(repliedMessageElement, messageContentElement.firstChild);
+  }
+
   messageElement.appendChild(senderElement);
   messageElement.appendChild(messageContentElement);
 
@@ -76,6 +111,7 @@ export function displayMessage(message) {
   // Scroll to the bottom of the chat area
   chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 }
+
 
 export function joinChat(name) {
   // Check if the name is already taken
