@@ -4,7 +4,7 @@ const signContainer = document.getElementById("login-container");
 
 // Function definitions
 import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, sendMessage, sendImage, setCurrentUser } from './chat.js';
-import { showPopup } from './utils.js'; // Import the showPopup function
+import { showPopup } from './utils.js';
 
 // Function definitions
 function signIn() {
