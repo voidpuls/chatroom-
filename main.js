@@ -61,24 +61,24 @@ function signUp() {
   const password = document.getElementById('password-input').value;
 
   auth.createUserWithEmailAndPassword(email, password)
-  .then((userCredential) => {
-    // User signed up successfully
-    const user = userCredential.user;
-    showPopup(`User ${user.email} signed up successfully!`);
-    signContainer.style.display = "none"; // Hide the sign-in container
+    .then((userCredential) => {
+      // User signed up successfully
+      const user = userCredential.user;
+      showPopup(`User ${user.email} signed up successfully!`);
+      signContainer.style.display = "none"; // Hide the sign-in container
 
-    // Send a verification email
-    user.sendEmailVerification().then(() => {
-      showPopup('Verification email sent. Please check your inbox and verify your email address.');
-    }).catch((error) => {
-      console.error('Error sending verification email:', error);
+      // Send a verification email
+      user.sendEmailVerification().then(() => {
+        showPopup('Verification email sent. Please check your inbox and verify your email address.');
+      }).catch((error) => {
+        console.error('Error sending verification email:', error);
+      });
+    })
+    .catch((error) => {
+      // Handle sign-up error
+      showPopup(`Error signing up: ${error.message}`);
     });
-  })
-  .catch((error) => {
-    // Handle sign-up error
-    showPopup(`Error signing up: ${error.message}`);
-  });
-
+}
 
 function updateUIBasedOnAuthState(user) {
   if (user && user.emailVerified) {
@@ -98,15 +98,6 @@ function updateUIBasedOnAuthState(user) {
     const chatInterface = document.querySelector('.chat-interface');
     chatInterface.classList.remove('show');
     showPopup('Please verify your email before joining the chat.');
-
-    // Resend verification email
-    user.sendEmailVerification()
-      .then(() => {
-        showPopup('Verification email sent. Please check your inbox and verify your email address.');
-      })
-      .catch((error) => {
-        console.error('Error sending verification email:', error);
-      });
   } else {
     toggleElement('login-container', true);
     toggleElement('name-input', true);
@@ -116,7 +107,6 @@ function updateUIBasedOnAuthState(user) {
     showPopup('You are not logged in.');
   }
 }
-
 
 function toggleElement(elementId, show, className) {
   const element = document.getElementById(elementId);
