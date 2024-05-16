@@ -77,11 +77,9 @@ export function displayMessage(message) {
         if (replyMessage) {
           const mentionedUser = replyMessage.includes(`@${currentUser.displayName}`);
           sendMessage(replyMessage.replace(`@${message.sender} `, ''), 'text', message);
-          if (mentionedUser || message.replyTo?.sender === currentUser.displayName) {
+          if (mentionedUser || message.replyTo?.sender === currentUser.displayName || message.sender === currentUser.displayName) {
             playSound();
             showNotification(message.sender, replyMessage);
-          } else if (message.sender === currentUser.displayName) {
-            playSound();
           }
           messageInput.value = '';
           messageInput.removeEventListener('keydown', handleReplyKeydown);
@@ -116,7 +114,7 @@ function playSound() {
 function showNotification(sender, message) {
   if (Notification.permission === 'granted') {
     const notification = new Notification(`New reply from ${sender}`, {
-      body: message, // Custom message string
+      body: message,
     });
     notification.onclick = () => {
       window.focus();
