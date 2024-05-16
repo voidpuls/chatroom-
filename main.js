@@ -33,7 +33,8 @@ function signOut() {
       toggleElement('login-container', true);
       toggleElement('name-input', true);
       toggleElement('chat-interface', false);
-      displaySystemMessage('You left the chat.', true);
+      displaySystemMessage(`${currentUser.displayName} left the chat.`, true); // Display a global message
+      currentUser = null; // Reset the currentUser variable
 
       // Reload the page after successful sign-out
       window.location.reload();
