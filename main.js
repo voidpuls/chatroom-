@@ -1,6 +1,7 @@
 // Declare and initialize the currentUser variable
 let currentUser = null;
-  const signContainer = document.getElementById("login-container");
+const signContainer = document.getElementById("login-container");
+
 // Function definitions
 import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, sendMessage, setCurrentUser } from './chat.js';
 import { showPopup } from './utils.js'; // Import the showPopup function
@@ -9,9 +10,9 @@ import { showPopup } from './utils.js'; // Import the showPopup function
 function signIn() {
   const email = document.getElementById('email-input').value;
   const password = document.getElementById('password-input').value;
+
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
-            window.location.reload();
       // Update the username display with a placeholder value
       signContainer.style.display = "none";
       updateUsername('User');
@@ -55,9 +56,27 @@ function resetPassword() {
     });
 }
 
-// Placeholder for the signUp function
 function signUp() {
-  // Add your sign-up logic here
+  const email = document.getElementById('email-input').value;
+  const password = document.getElementById('password-input').value;
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      // User signed up successfully
+      const user = userCredential.user;
+      showPopup(`User ${user.email} signed up successfully!`);
+
+      // Optional: Send a verification email
+      user.sendEmailVerification().then(() => {
+        showPopup('Verification email sent. Please check your inbox and verify your email address.');
+      }).catch((error) => {
+        console.error('Error sending verification email:', error);
+      });
+    })
+    .catch((error) => {
+      // Handle sign-up error
+      showPopup(`Error signing up: ${error.message}`);
+    });
 }
 
 function updateUIBasedOnAuthState(user) {
@@ -118,18 +137,12 @@ function initializeApp() {
   // Add event listeners only if the elements exist
   if (signInButton !== null) {
     signInButton.addEventListener('click', signIn);
-    window.location.reload();
-    signContainer.style.display = 'none';
-    
   } else {
     console.log('sign-in-button element not found');
   }
 
   if (signUpButton !== null) {
     signUpButton.addEventListener('click', signUp);
-    window.location.reload();
-    signContainer.style.display = 'none';
-
   } else {
     console.log('sign-up-button element not found');
   }
