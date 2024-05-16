@@ -12,6 +12,57 @@ function filterProfanity(message) {
   const regex = new RegExp(profaneWords.join('|'), 'gi');
   return message.replace(regex, match => '*'.repeat(match.length));
 }
+export function sendMessage(message, file = null) {
+  if (currentUser) {
+    const filteredMessage = filterProfanity(message);
+    const messageData = {
+      text: filteredMessage,
+      sender: currentUser.displayName,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    if (file) {
+      const maxWidth = 1000;
+      const maxHeight = 1000;
+
+      resizeImage(file, maxWidth, maxHeight)
+        .then((resizedFile) => {
+          const storageRef = firebase.storage().ref();
+          const imageRef = storageRef.child(`images/${resizedFile.name}`);
+
+          imageRef.put(resizedFile)
+            .then((snapshot) => {
+              console.log('Image uploaded successfully');
+              return snapshot.ref.getDownloadURL();
+            })
+            .then((downloadURL) => {
+              messageData.imageURL = downloadURL;
+              messagesCollection.add(messageData)
+                .then(() => {
+                  document.getElementById('message-input').value = '';
+                  document.getElementById('image-input').value = '';
+                })
+                .catch((error) => {
+                  console.error('Error sending message:', error);
+                  showPopup('An error occurred while sending the message. Please try again later.');
+                });
+            })
+            .catch((error) => {
+              console.error('Error uploading image:', error);
+              showPopup('An error occurred while uploading the image. Please try again later.');
+            });
+        })
+        .catch((error) => {
+          console.error('Error resizing image:', error);
+          showPopup('An error occurred while resizing the image. Please try again later.');
+        });
+    } else {
+      // Code for sending text messages
+    }
+  } else {
+    showPopup('You must be signed in to send messages.');
+  }
+}
 
 function resizeImage(file, maxWidth, maxHeight) {
   return new Promise((resolve, reject) => {
