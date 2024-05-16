@@ -12,7 +12,8 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-const auth = firebase.auth();
-const firestore = firebase.firestore();
-const messagesCollection = firestore.collection('messages');
-const usersCollection = firestore.collection('users');
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const auth = getAuth(app);
+const firestore = getFirestore(app);
+const storage = getStorage(app); // Initialize the Firebase Storage service
