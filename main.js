@@ -1,13 +1,9 @@
-// Declare and initialize the currentUser variable
 let currentUser = null;
-
-// Function definitions
 import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, sendMessage, setCurrentUser } from './chat.js';
-import { showPopup } from './utils.js'; // Import the showPopup function
+import { showPopup } from './utils.js';
 
-// Text-to-Speech functionality
 const synth = window.speechSynthesis;
-let textToSpeechEnabled = false; // Flag to track text-to-speech state
+let textToSpeechEnabled = false;
 
 function textToSpeech(text) {
   if (textToSpeechEnabled) {
@@ -16,7 +12,6 @@ function textToSpeech(text) {
   }
 }
 
-// Toggle text-to-speech functionality
 function toggleTextToSpeech() {
   textToSpeechEnabled = !textToSpeechEnabled;
   const ttsButton = document.getElementById('tts-button');
@@ -29,23 +24,18 @@ function toggleTextToSpeech() {
   }
 }
 
-// Function definitions
 function signIn() {
   const email = document.getElementById('email-input').value;
   const password = document.getElementById('password-input').value;
-
   auth.signInWithEmailAndPassword(email, password)
     .then((userCredential) => {
-      // Check if the user's email is verified
       if (userCredential.user.emailVerified) {
-        // Reload the page after successful sign-in
         window.location.reload();
         textToSpeech('You have successfully signed in.');
       } else {
         showPopup('Please verify your email before signing in.');
         textToSpeech('Please verify your email before signing in.');
       }
-      // Update the username display with a placeholder value
       updateUsername('User');
     })
     .catch((error) => {
@@ -65,10 +55,8 @@ function signOut() {
       toggleElement('login-container', true);
       toggleElement('name-input', true);
       toggleElement('chat-interface', false);
-      displaySystemMessage(`${currentUser.displayName} left the chat.`, true); // Display a global message
-      currentUser = null; // Reset the currentUser variable
-
-      // Reload the page after successful sign-out
+      displaySystemMessage(`${currentUser.displayName} left the chat.`, true);
+      currentUser = null;
       window.location.reload();
     })
     .catch((error) => {
@@ -78,7 +66,6 @@ function signOut() {
 
 function resetPassword() {
   const email = document.getElementById('email-input').value;
-
   auth.sendPasswordResetEmail(email)
     .then(() => {
       showPopup('Password reset email sent. Check your inbox.');
@@ -91,24 +78,20 @@ function resetPassword() {
 function signUp() {
   const email = document.getElementById('email-input').value;
   const password = document.getElementById('password-input').value;
-
   auth.createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
-      // User signed up successfully
       const user = userCredential.user;
       showPopup(`User ${user.email} signed up successfully!`);
-
-      // Send a verification email
-      user.sendEmailVerification().then(() => {
-        showPopup('Verification email sent. Please check your inbox and verify your email address.');
-        // Reload the page after successful sign-up and email verification
-        window.location.reload();
-      }).catch((error) => {
-        console.error('Error sending verification email:', error);
-      });
+      user.sendEmailVerification()
+        .then(() => {
+          showPopup('Verification email sent. Please check your inbox and verify your email address.');
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.error('Error sending verification email:', error);
+        });
     })
     .catch((error) => {
-      // Handle sign-up error
       showPopup(`Error signing up: ${error.message}`);
     });
 }
@@ -158,7 +141,6 @@ function toggleElement(elementId, show, className) {
   }
 }
 
-// Wrap your code inside a function
 function initializeApp() {
   const signInButton = document.getElementById('sign-in-button');
   const signUpButton = document.getElementById('sign-up-button');
@@ -168,7 +150,6 @@ function initializeApp() {
   const saveNameButton = document.getElementById('save-name-button');
   const signOutButton = document.getElementById('sign-out-button');
 
-  // Add event listeners only if the elements exist
   if (signInButton !== null) {
     signInButton.addEventListener('click', signIn);
   } else {
@@ -236,22 +217,19 @@ function initializeApp() {
     console.log('sign-out-button element not found');
   }
 
-  // Initialize Firebase and set up event listeners for real-time updates
   firebase.auth().onAuthStateChanged((user) => {
     currentUser = user;
-    setCurrentUser(user); // Set the currentUser in the chat.js module
+    setCurrentUser(user);
     updateUIBasedOnAuthState(user);
   });
 
-  messagesCollection.orderBy('timestamp')
-    .onSnapshot((snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === 'added') {
-          displayMessage(change.doc.data());
-        }
-      });
+  messagesCollection.orderBy('timestamp').onSnapshot((snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      if (change.type === 'added') {
+        displayMessage(change.doc.data());
+      }
     });
+  });
 }
 
-// Call the initializeApp function when the DOM is ready
 document.addEventListener('DOMContentLoaded', initializeApp);
