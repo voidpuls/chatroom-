@@ -107,7 +107,7 @@ export function displayMessage(message) {
 }
 
 function playSound() {
-  const audioUrl = 'scream.mp3'; // Path to the audio file in the root directory
+  const audioUrl = './scream.mp3'; // Relative path to the audio file
   const audio = new Audio(audioUrl);
   audio.play().catch((error) => {
     console.error('Error playing sound:', error);
