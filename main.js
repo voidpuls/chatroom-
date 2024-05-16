@@ -3,7 +3,7 @@ let currentUser = null;
 const signContainer = document.getElementById("login-container");
 
 // Function definitions
-import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, sendMessage, sendImage, setCurrentUser } from './chat.js';
+import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, sendMessage, setCurrentUser } from './chat.js';
 import { showPopup } from './utils.js';
 
 // Function definitions
