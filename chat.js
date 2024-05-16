@@ -85,10 +85,10 @@ export function displayMessage(message) {
           const mentionedUser = replyMessage.includes(`@${currentUser.displayName}`);
           sendMessage(replyMessage.replace(`@${message.sender} `, ''), 'text', message);
           if (mentionedUser || message.replyTo?.sender === currentUser.displayName) {
-            playSound('/scream.mp3'); // Play the mention sound for the current user or when someone replies to the user's message
+            playSound(); // Play the mention sound for the current user or when someone replies to the user's message
           } else if (message.sender === currentUser.displayName) {
             // Play the mention sound for the user being replied to
-            playSound('/scream.mp3');
+            playSound();
           }
           messageInput.value = '';
           messageInput.removeEventListener('keydown', handleReplyKeydown);
@@ -117,8 +117,8 @@ export function displayMessage(message) {
   // Scroll to the bottom of the chat area
   chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 
-  function playSound(soundFile) {
-    const audioUrl = window.location.origin + '/' + soundFile;
+  function playSound() {
+    const audioUrl = 'file:///media/fuse/drivefs-b98746141f03e87a5e565db9e958361a/root/220823__ericsueiro__man-shout-like-a-goat.mp3';
     const audio = new Audio(audioUrl);
     audio.play()
       .catch(error => {
