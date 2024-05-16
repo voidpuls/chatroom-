@@ -12,8 +12,6 @@ function signIn() {
 
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
-      // Reload the page after successful sign-in
-      window.location.reload();
       // Update the username display with a placeholder value
       updateUsername('User');
     })
