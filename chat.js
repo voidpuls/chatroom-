@@ -85,7 +85,10 @@ export function displayMessage(message) {
           const mentionedUser = replyMessage.includes(`@${currentUser.displayName}`);
           sendMessage(replyMessage.replace(`@${message.sender} `, ''), 'text', message);
           if (mentionedUser) {
-            playSound('mention.mp3'); // Play the mention sound
+            playSound('mention.mp3'); // Play the mention sound for the current user
+          } else if (message.sender === currentUser.displayName) {
+            // Play the mention sound for the user being replied to
+            playSound('mention.mp3');
           }
           messageInput.value = '';
           messageInput.removeEventListener('keydown', handleReplyKeydown);
@@ -96,6 +99,24 @@ export function displayMessage(message) {
 
   messageContentElement.appendChild(replyButton);
 
+  // Display replied message
+  if (message.replyTo) {
+    const repliedMessageElement = document.createElement('div');
+    repliedMessageElement.classList.add('replied-message');
+    repliedMessageElement.textContent = `Replying to ${message.replyTo.sender}: ${message.replyTo.content}`;
+    messageContentElement.insertBefore(repliedMessageElement, messageContentElement.firstChild);
+  }
+
+  messageElement.appendChild(senderElement);
+  messageElement.appendChild(messageContentElement);
+
+  const chatMessagesContainer = document.getElementById('chat-messages');
+  chatMessagesContainer.appendChild(messageElement);
+  toggleElement('chat-messages', true); // Show the chat messages container
+
+  // Scroll to the bottom of the chat area
+  chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+}
   // Display replied message
   if (message.replyTo) {
     const repliedMessageElement = document.createElement('div');
@@ -242,7 +263,4 @@ export function toggleElement(elementId, show, className) {
   }
 }
 
-function playSound(soundFile) {
-  const audio = new Audio(soundFile);
-  audio.play();
-}
+
