@@ -85,10 +85,10 @@ export function displayMessage(message) {
           const mentionedUser = replyMessage.includes(`@${currentUser.displayName}`);
           sendMessage(replyMessage.replace(`@${message.sender} `, ''), 'text', message);
           if (mentionedUser) {
-            playSound('/scream.wav'); // Play the mention sound for the current user
+            playSound('./scream.wav'); // Play the mention sound for the current user
           } else if (message.sender === currentUser.displayName) {
             // Play the mention sound for the user being replied to
-            playSound('/scream.wav');
+            playSound('./scream.wav');
           }
           messageInput.value = '';
           messageInput.removeEventListener('keydown', handleReplyKeydown);
