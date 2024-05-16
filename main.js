@@ -278,7 +278,7 @@ function resizeAndSendImage(file) {
 
     canvas.toBlob(
       (blob) => {
-        const storageRef = firebase.storage().ref();
+        const storageRef = firebase.app().storage().ref(); // Use firebase.app().storage() instead of firebase.storage()
         const imageRef = storageRef.child(`images/${file.name}`);
 
         imageRef.put(blob).then((snapshot) => {
