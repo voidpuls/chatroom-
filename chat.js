@@ -70,6 +70,12 @@ export function displayMessage(message) {
 }
 
 export function joinChat(name) {
+  const filteredName = filterProfanity(name);
+  if (filteredName !== name) {
+    showPopup('Please choose a different name without profanity.');
+    return;
+  }
+
   // Check if the name is already taken
   usersCollection.where('displayName', '==', name).get()
     .then((querySnapshot) => {
@@ -115,25 +121,44 @@ export function joinChat(name) {
 
 export function changeUserName(newName) {
   if (currentUser) {
-    const userData = {
-      displayName: newName,
-      email: currentUser.email
-    };
+    const filteredName = filterProfanity(newName);
+    if (filteredName !== newName) {
+      showPopup('Please choose a different name without profanity.');
+      return;
+    }
 
-    usersCollection.doc(currentUser.uid).set(userData)
-      .then(() => {
-        return currentUser.updateProfile({
-          displayName: newName
-        });
-      })
-      .then(() => {
-        toggleElement('profile-menu', false);
-        updateUsername(newName);
-        displaySystemMessage(`${currentUser.displayName} changed their name to ${newName}.`, true); // Display a global message
+    // Check if the new name is already taken
+    usersCollection.where('displayName', '==', newName).get()
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+          showPopup('This name is already taken. Please choose a different name.');
+          return;
+        }
+
+        const userData = {
+          displayName: newName,
+          email: currentUser.email
+        };
+
+        usersCollection.doc(currentUser.uid).set(userData)
+          .then(() => {
+            return currentUser.updateProfile({
+              displayName: newName
+            });
+          })
+          .then(() => {
+            toggleElement('profile-menu', false);
+            updateUsername(newName);
+            displaySystemMessage(`${currentUser.displayName} changed their name to ${newName}.`, true); // Display a global message
+          })
+          .catch((error) => {
+            console.error('Error updating user profile:', error);
+            showPopup('An error occurred while updating your name. Please try again later.');
+          });
       })
       .catch((error) => {
-        console.error('Error updating user profile:', error);
-        showPopup('An error occurred while updating your name. Please try again later.');
+        console.error('Error checking name availability:', error);
+        showPopup('An error occurred while checking name availability. Please try again later.');
       });
   } else {
     showPopup('You must be signed in to change your name.');
