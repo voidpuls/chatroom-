@@ -1,5 +1,8 @@
-// Initialize Firebase
-const firebaseConfig = {
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"; // Import the Firebase Storage moduleconst firebaseConfig = {
   apiKey: "AIzaSyDisnhcjYmvZc2y9-toeWWKHq9nHYb8Fn4",
   authDomain: "chatroom-50dfb.firebaseapp.com",
   databaseURL: "https://chatroom-50dfb-default-rtdb.firebaseio.com",
