@@ -31,13 +31,14 @@
         <input type="file" accept="image/*" id="image-input" style="display: none;">
         <button id="send-button">Send</button>
         <button id="sign-out-button">Sign Out</button>
+        <button id="tts-button" onclick="toggleTextToSpeech()">Enable Text-to-Speech</button>
         <div class="username-display">
           <span id="username-display"></span>
         </div>
       </div>
     </div>
   </div>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="firebase.js"></script>
