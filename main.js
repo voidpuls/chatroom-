@@ -1,6 +1,6 @@
 // Declare and initialize the currentUser variable
 let currentUser = null;
-  const signContainer = document.getElementById("login-container");
+
 // Function definitions
 import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, sendMessage, setCurrentUser } from './chat.js';
 import { showPopup } from './utils.js'; // Import the showPopup function
@@ -9,11 +9,12 @@ import { showPopup } from './utils.js'; // Import the showPopup function
 function signIn() {
   const email = document.getElementById('email-input').value;
   const password = document.getElementById('password-input').value;
+
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
-            window.location.reload();
+      // Reload the page after successful sign-in
+      window.location.reload();
       // Update the username display with a placeholder value
-      signContainer.style.display = "none";
       updateUsername('User');
     })
     .catch((error) => {
@@ -118,18 +119,12 @@ function initializeApp() {
   // Add event listeners only if the elements exist
   if (signInButton !== null) {
     signInButton.addEventListener('click', signIn);
-    window.location.reload();
-    signContainer.style.display = 'none';
-    
   } else {
     console.log('sign-in-button element not found');
   }
 
   if (signUpButton !== null) {
     signUpButton.addEventListener('click', signUp);
-    window.location.reload();
-    signContainer.style.display = 'none';
-
   } else {
     console.log('sign-up-button element not found');
   }
