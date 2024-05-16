@@ -35,6 +35,44 @@ export function sendMessage(message) {
   }
 }
 
+// Function to handle image upload
+export function sendImage(file) {
+  if (currentUser) {
+    const storageRef = firebase.storage().ref();
+    const imageRef = storageRef.child(`images/${file.name}`);
+
+    imageRef.put(file)
+      .then((snapshot) => {
+        console.log('Image uploaded successfully');
+        return snapshot.ref.getDownloadURL();
+      })
+      .then((downloadURL) => {
+        const messageData = {
+          text: '',
+          sender: currentUser.displayName,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          imageURL: downloadURL
+        };
+
+        messagesCollection.add(messageData)
+          .then(() => {
+            document.getElementById('message-input').value = '';
+            document.getElementById('image-input').value = '';
+          })
+          .catch((error) => {
+            console.error('Error sending message:', error);
+            showPopup('An error occurred while sending the message. Please try again later.');
+          });
+      })
+      .catch((error) => {
+        console.error('Error uploading image:', error);
+        showPopup('An error occurred while uploading the image. Please try again later.');
+      });
+  } else {
+    showPopup('You must be signed in to send images.');
+  }
+}
+
 export function displayMessage(message) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message');
@@ -45,6 +83,13 @@ export function displayMessage(message) {
 
   const messageContentElement = document.createElement('div');
   messageContentElement.classList.add('message-content');
+
+  if (message.imageURL) {
+    const imageElement = document.createElement('img');
+    imageElement.src = message.imageURL;
+    imageElement.classList.add('image-preview');
+    messageContentElement.appendChild(imageElement);
+  }
 
   const textElement = document.createElement('p');
   textElement.classList.add('message-text');
