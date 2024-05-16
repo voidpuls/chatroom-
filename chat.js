@@ -5,13 +5,6 @@ let currentUser = null;
 export function setCurrentUser(user) {
   currentUser = user;
 }
-function playSound() {
-  const audioUrl = './scream.mp3'; // Relative path to the audio file
-  const audio = new Audio(audioUrl);
-  audio.play().catch((error) => {
-    console.error('Error playing sound:', error);
-  });
-}
 
 function filterProfanity(message) {
   const regex = new RegExp(profaneWords.join('|'), 'gi');
@@ -113,7 +106,12 @@ export function displayMessage(message) {
   chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 }
 
-
+function playSound() {
+  const audio = document.getElementById('notification-sound');
+  audio.play().catch((error) => {
+    console.error('Error playing sound:', error);
+  });
+}
 
 function showNotification(sender, message) {
   if (Notification.permission === 'granted') {
