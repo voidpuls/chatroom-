@@ -107,29 +107,81 @@ function toggleElement(elementId, show, className) {
 
 // Wrap your code inside a function
 function initializeApp() {
-  // Event listeners and main logic
-  document.getElementById('sign-in-button').addEventListener('click', signIn);
-  document.getElementById('sign-up-button').addEventListener('click', signUp);
-  document.getElementById('reset-password-button').addEventListener('click', resetPassword);
-  document.getElementById('send-button').addEventListener('click', () => {
-    const message = document.getElementById('message-input').value.trim();
-    if (message) {
-      sendMessage(message);
-      document.getElementById('message-input').value = '';
-    }
-  });
-  document.getElementById('change-name-button').addEventListener('click', () => {
-    toggleElement('profile-menu', true);
-  });
-  document.getElementById('save-name-button').addEventListener('click', () => {
-    const newName = document.getElementById('new-name-input').value.trim();
-    if (newName) {
-      changeUserName(newName);
-    } else {
-      showPopup('Please enter a new name.');
-    }
-  });
-  document.getElementById('sign-out-button').addEventListener('click', signOut);
+  const signInButton = document.getElementById('sign-in-button');
+  const signUpButton = document.getElementById('sign-up-button');
+  const resetPasswordButton = document.getElementById('reset-password-button');
+  const sendButton = document.getElementById('send-button');
+  const changeNameButton = document.getElementById('change-name-button');
+  const saveNameButton = document.getElementById('save-name-button');
+  const signOutButton = document.getElementById('sign-out-button');
+
+  // Add event listeners only if the elements exist
+  if (signInButton !== null) {
+    signInButton.addEventListener('click', signIn);
+  } else {
+    console.log('sign-in-button element not found');
+  }
+
+  if (signUpButton !== null) {
+    signUpButton.addEventListener('click', signUp);
+  } else {
+    console.log('sign-up-button element not found');
+  }
+
+  if (resetPasswordButton !== null) {
+    resetPasswordButton.addEventListener('click', resetPassword);
+  } else {
+    console.log('reset-password-button element not found');
+  }
+
+  if (sendButton !== null) {
+    sendButton.addEventListener('click', () => {
+      const messageInput = document.getElementById('message-input');
+      if (messageInput !== null) {
+        const message = messageInput.value.trim();
+        if (message) {
+          sendMessage(message);
+          messageInput.value = '';
+        }
+      } else {
+        console.log('message-input element not found');
+      }
+    });
+  } else {
+    console.log('send-button element not found');
+  }
+
+  if (changeNameButton !== null) {
+    changeNameButton.addEventListener('click', () => {
+      toggleElement('profile-menu', true);
+    });
+  } else {
+    console.log('change-name-button element not found');
+  }
+
+  if (saveNameButton !== null) {
+    saveNameButton.addEventListener('click', () => {
+      const newNameInput = document.getElementById('new-name-input');
+      if (newNameInput !== null) {
+        const newName = newNameInput.value.trim();
+        if (newName) {
+          changeUserName(newName);
+        } else {
+          showPopup('Please enter a new name.');
+        }
+      } else {
+        console.log('new-name-input element not found');
+      }
+    });
+  } else {
+    console.log('save-name-button element not found');
+  }
+
+  if (signOutButton !== null) {
+    signOutButton.addEventListener('click', signOut);
+  } else {
+    console.log('sign-out-button element not found');
+  }
 
   // Initialize Firebase and set up event listeners for real-time updates
   firebase.auth().onAuthStateChanged((user) => {
