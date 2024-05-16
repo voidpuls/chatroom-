@@ -9,11 +9,13 @@ import { showPopup } from './utils.js'; // Import the showPopup function
 function signIn() {
   const email = document.getElementById('email-input').value;
   const password = document.getElementById('password-input').value;
-
+  const signContainer = document.getElementById("login-container");
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
       // Update the username display with a placeholder value
+      signContainer.style.display = "none";
       updateUsername('User');
+      window.location.reload();
     })
     .catch((error) => {
       showPopup(`Error signing in: ${error.message}`);
