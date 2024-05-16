@@ -98,6 +98,15 @@ function updateUIBasedOnAuthState(user) {
     const chatInterface = document.querySelector('.chat-interface');
     chatInterface.classList.remove('show');
     showPopup('Please verify your email before joining the chat.');
+
+    // Resend verification email
+    user.sendEmailVerification()
+      .then(() => {
+        showPopup('Verification email sent. Please check your inbox and verify your email address.');
+      })
+      .catch((error) => {
+        console.error('Error sending verification email:', error);
+      });
   } else {
     toggleElement('login-container', true);
     toggleElement('name-input', true);
@@ -107,6 +116,7 @@ function updateUIBasedOnAuthState(user) {
     showPopup('You are not logged in.');
   }
 }
+
 
 function toggleElement(elementId, show, className) {
   const element = document.getElementById(elementId);
