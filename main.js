@@ -5,6 +5,30 @@ let currentUser = null;
 import { updateUsername, displayMessage, displaySystemMessage, joinChat, changeUserName, sendMessage, setCurrentUser } from './chat.js';
 import { showPopup } from './utils.js'; // Import the showPopup function
 
+// Text-to-Speech functionality
+const synth = window.speechSynthesis;
+let textToSpeechEnabled = false; // Flag to track text-to-speech state
+
+function textToSpeech(text) {
+  if (textToSpeechEnabled) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    synth.speak(utterance);
+  }
+}
+
+// Toggle text-to-speech functionality
+function toggleTextToSpeech() {
+  textToSpeechEnabled = !textToSpeechEnabled;
+  const ttsButton = document.getElementById('tts-button');
+  if (textToSpeechEnabled) {
+    ttsButton.textContent = 'Disable Text-to-Speech';
+    textToSpeech('Text-to-speech enabled.');
+  } else {
+    ttsButton.textContent = 'Enable Text-to-Speech';
+    textToSpeech('Text-to-speech disabled.');
+  }
+}
+
 // Function definitions
 function signIn() {
   const email = document.getElementById('email-input').value;
@@ -16,14 +40,17 @@ function signIn() {
       if (userCredential.user.emailVerified) {
         // Reload the page after successful sign-in
         window.location.reload();
+        textToSpeech('You have successfully signed in.');
       } else {
         showPopup('Please verify your email before signing in.');
+        textToSpeech('Please verify your email before signing in.');
       }
       // Update the username display with a placeholder value
       updateUsername('User');
     })
     .catch((error) => {
       showPopup(`Error signing in: ${error.message}`);
+      textToSpeech(`Error signing in: ${error.message}`);
     });
 }
 
