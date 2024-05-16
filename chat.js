@@ -84,8 +84,8 @@ export function displayMessage(message) {
         if (replyMessage) {
           const mentionedUser = replyMessage.includes(`@${currentUser.displayName}`);
           sendMessage(replyMessage.replace(`@${message.sender} `, ''), 'text', message);
-          if (mentionedUser) {
-            playSound('/scream.mp3'); // Play the mention sound for the current user
+          if (mentionedUser || message.replyTo?.sender === currentUser.displayName) {
+            playSound('/scream.mp3'); // Play the mention sound for the current user or when someone replies to the user's message
           } else if (message.sender === currentUser.displayName) {
             // Play the mention sound for the user being replied to
             playSound('/scream.mp3');
