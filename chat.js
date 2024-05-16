@@ -100,6 +100,7 @@ export function joinChat(name) {
             toggleElement('chat-input', true);
             toggleElement('chat-messages', true);
             toggleElement('name-input', false);
+            toggleElement('login-container', false); // Hide the login container
             updateUsername(name);
             displaySystemMessage(`${name} joined the chat.`, true); // Display a global message
           })
