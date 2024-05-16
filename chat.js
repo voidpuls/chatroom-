@@ -5,6 +5,13 @@ let currentUser = null;
 export function setCurrentUser(user) {
   currentUser = user;
 }
+function playSound() {
+  const audioUrl = './scream.mp3'; // Relative path to the audio file
+  const audio = new Audio(audioUrl);
+  audio.play().catch((error) => {
+    console.error('Error playing sound:', error);
+  });
+}
 
 function filterProfanity(message) {
   const regex = new RegExp(profaneWords.join('|'), 'gi');
@@ -117,8 +124,7 @@ function playSound() {
 function showNotification(sender, message) {
   if (Notification.permission === 'granted') {
     const notification = new Notification(`New reply from ${sender}`, {
-      body: message,
-      icon: 'path/to/notification-icon.png', // Replace with the path to your notification icon
+      body: message, // Custom message string
     });
     notification.onclick = () => {
       window.focus();
